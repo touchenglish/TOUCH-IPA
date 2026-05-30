@@ -127,18 +127,20 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
   text-align:center;position:relative;
 }
 .node .disc{
-  width:76px;height:76px;border-radius:50%;display:grid;place-items:center;font-size:32px;
+  width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-size:34px;
   background:var(--white);border:3px solid var(--line);box-shadow:0 7px 0 var(--line);
   transition:transform .12s;
 }
 .node:active .disc{transform:translateY(3px)}
-.node.open .disc{border-color:var(--teal);box-shadow:0 7px 0 var(--teal-dd);background:#EAFBF4}
-.node.done .disc{border-color:var(--sun-d);box-shadow:0 7px 0 var(--sun-d);background:#FFF6DD}
+.node.open .disc{border:none;color:#fff;background:radial-gradient(circle at 38% 30%,#FF8E6E,#E85F3E);
+  box-shadow:0 0 0 6px rgba(232,95,62,.18),0 8px 0 var(--coral-d)}
+.node.done .disc{border:none;color:#fff;background:radial-gradient(circle at 38% 30%,#2BA985,#0E9C72);
+  box-shadow:0 0 0 4px #E9C877,0 0 0 5px #C9A24B,0 7px 12px rgba(0,0,0,.18)}
 .node.locked{cursor:not-allowed}
 .node.locked .disc{filter:grayscale(.7);opacity:.55}
-.node .nm{font-family:'Fredoka';font-weight:600;font-size:12.5px;line-height:1.15;color:var(--ink)}
+.node .nm{font-family:'Fredoka';font-weight:600;font-size:13px;line-height:1.15;color:var(--ink);margin-top:2px}
 .node.locked .nm{color:var(--ink-soft)}
-.node .badge-dot{position:absolute;top:-6px;right:6px;font-size:16px}
+.node .badge-dot{position:absolute;top:-8px;right:-2px}
 .connector{width:4px;height:30px;border-radius:9px;background:repeating-linear-gradient(180deg,var(--line) 0 6px,transparent 6px 12px)}
 .start-flag{position:absolute;left:50%;transform:translateX(-50%);top:-2px;
   background:var(--coral);color:#fff;font-family:'Fredoka';font-weight:700;font-size:11px;
@@ -182,13 +184,15 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 /* learn blocks */
 .block{margin-top:14px;padding:16px}
 .block h3{font-size:16px;margin-bottom:10px;color:var(--ink)}
-.ipa-grid{display:flex;flex-wrap:wrap;gap:9px}
-.ipa-pill{display:inline-flex;flex-direction:column;align-items:center;gap:2px;
-  padding:9px 4px;min-width:62px;border-radius:14px;background:var(--cream);border:1px solid var(--line);
-  cursor:pointer;transition:transform .1s}
-.ipa-pill:active{transform:scale(.94)}
-.ipa-pill b{font-size:19px;color:var(--teal-dd)} .ipa-pill span{font-size:11px;color:var(--ink-soft);font-weight:700}
+.ipa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ipa-pill{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  padding:13px 6px 10px;border-radius:16px;background:var(--white);border:1px solid var(--line);
+  box-shadow:0 2px 0 var(--line);cursor:pointer;transition:transform .1s, box-shadow .1s}
+.ipa-pill:active{transform:translateY(2px);box-shadow:none}
+.ipa-pill b{font-size:22px;color:var(--coral);line-height:1.1} .ipa-pill .w{font-size:13px;color:var(--ink);font-weight:800}
+.ipa-pill .sp{font-size:12px;color:var(--ink-soft);opacity:.65;margin-top:1px}
 .ipa-pill.voiced b{color:var(--plum-d)} .ipa-pill.voiceless b{color:var(--sky-d)}
+@media (max-width:380px){ .ipa-grid{grid-template-columns:repeat(3,1fr)} }
 .note{margin-top:12px;background:#FFF6DD;border:1px solid #F4DFA6;border-radius:14px;padding:12px 14px;
   font-size:14px;font-weight:700;color:#7a5a00;display:flex;gap:9px;align-items:flex-start}
 .quote{margin-top:16px;text-align:center;font-family:'Fredoka';font-weight:600;font-size:20px;color:var(--teal-dd);
@@ -258,7 +262,8 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 @keyframes slideIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
 .badge-card{background:linear-gradient(160deg,#FFF7E3,#FFE9C2);border:1px solid #F2D89A;border-radius:20px;
   padding:20px;width:100%;box-shadow:var(--soft);animation:pop .6s .2s cubic-bezier(.2,1.4,.4,1) both}
-.badge-card .em{font-size:54px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.15))}
+.badge-card .medal{width:78px;height:78px;margin-bottom:6px}
+.badge-card .medal svg{width:32px;height:32px}
 .badge-card b{display:block;font-family:'Fredoka';font-size:20px;color:#8a5a00;margin-top:6px}
 .badge-card span{font-size:13px;color:#9a7330;font-weight:700}
 /* unlocked = STATUS label, not a button: soft tint, thin border, no raised
@@ -274,27 +279,59 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 
 /* ---------- PROFILE ---------- */
 .profile{padding:18px}
-.pf-head{display:flex;align-items:center;gap:16px;padding:18px;border-radius:20px;
-  background:linear-gradient(140deg,#12B886,#0E9C72);color:#fff;box-shadow:var(--soft)}
-.pf-head .av{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:34px;flex:none}
-.pf-head h2{font-size:22px}.pf-head p{font-weight:700;opacity:.9;font-size:13px;margin:2px 0 0}
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 8px;text-align:center;box-shadow:0 3px 0 var(--line)}
-.stat .v{font-family:'Fredoka';font-weight:700;font-size:22px;color:var(--teal-dd)}
-.stat .l{font-size:11px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.pf-head{display:flex;align-items:center;gap:16px;padding:20px;border-radius:24px;
+  background:linear-gradient(140deg,#16C292,#0E9C72 70%,#0B7F5D);color:#fff;
+  box-shadow:0 12px 28px rgba(14,156,114,.32)}
+.pf-head .av{position:relative;width:72px;height:72px;border-radius:50%;flex:none;
+  background:rgba(255,255,255,.18);display:grid;place-items:center;
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.45), 0 4px 10px rgba(0,0,0,.18)}
+.pf-head .av-initials{font-family:'Fredoka';font-weight:700;font-size:26px;color:#fff;letter-spacing:.5px}
+.pf-head .av-lv{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  background:var(--sun);color:#5a3d00;font-family:'Fredoka';font-weight:700;font-size:11px;
+  padding:2px 9px;border-radius:99px;box-shadow:0 2px 5px rgba(0,0,0,.25);white-space:nowrap}
+.pf-meta{flex:1;min-width:0}
+.pf-head h2{font-size:21px;line-height:1.1}
+.pf-head p{font-weight:700;opacity:.95;font-size:13px;margin:3px 0 9px}
+.pf-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.28);overflow:hidden}
+.pf-bar > i{display:block;height:100%;border-radius:99px;background:#fff;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.pf-head small{display:block;font-size:11px;opacity:.9;font-weight:700;margin-top:5px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 8px 12px;text-align:center;box-shadow:0 3px 0 var(--line)}
+.stat .si{width:34px;height:34px;margin:0 auto 6px;border-radius:11px;display:grid;place-items:center;font-size:17px}
+.stat .si.streak{background:#FFEDE6;color:var(--coral-d)} .stat .si.xp{background:#FFF6DD;color:var(--sun-d)} .stat .si.done{background:#E7F7F0;color:var(--teal-dd)}
+.stat .v{font-family:'Fredoka';font-weight:700;font-size:21px;color:var(--ink)}
+.stat .l{font-size:10.5px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
 .sect-title{font-family:'Fredoka';font-weight:700;font-size:15px;margin:20px 4px 10px;color:var(--ink)}
-.badge-shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.bcell{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 8px;text-align:center;box-shadow:0 3px 0 var(--line)}
-.bcell .em{font-size:30px}.bcell .n{font-size:11px;font-weight:800;margin-top:4px;line-height:1.1}
-.bcell.locked{filter:grayscale(1);opacity:.4}
+.badge-shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.bcell{background:transparent;border:none;padding:4px 2px;text-align:center;box-shadow:none}
+.bcell .n{font-size:11px;font-weight:800;margin-top:7px;line-height:1.15;color:var(--ink)}
+.bcell.locked{opacity:.55}
+@media (max-width:380px){ .badge-shelf{grid-template-columns:repeat(3,1fr)} }
+/* reusable medallion (profile shelf, reward card, map node) */
+.medal{width:54px;height:54px;margin:0 auto;border-radius:50%;display:grid;place-items:center;color:#fff;
+  box-shadow:0 0 0 3px #C9A24B,0 0 0 4px #E9C877,0 5px 10px rgba(0,0,0,.22),inset 0 2px 5px rgba(255,255,255,.4);
+  position:relative;overflow:hidden;flex:none}
+.medal::after{content:"";position:absolute;top:5px;left:9px;width:20px;height:12px;border-radius:50%;background:rgba(255,255,255,.4);filter:blur(3px)}
+.medal.teal{background:radial-gradient(circle at 35% 28%,#2BA985,#0E9C72 60%,#0B7F5D)}
+.medal.coral{background:radial-gradient(circle at 35% 28%,#FF8E6E,#E85F3E 60%,#C94A2C)}
+.medal.sky{background:radial-gradient(circle at 35% 28%,#6FC1EE,#2E92CE 60%,#1F73A6)}
+.medal.navy{background:radial-gradient(circle at 35% 28%,#5A5470,#3A3550 60%,#272338)}
+.medal.locked{background:radial-gradient(circle at 35% 28%,#cfc7b8,#b3aa99);
+  box-shadow:0 0 0 3px #cfc4a8,0 0 0 4px #ddd3bb,0 4px 8px rgba(0,0,0,.12);color:#fff}
+.medal.lg{width:78px;height:78px} .medal.lg svg{width:32px;height:32px}
+.medal.sm{width:30px;height:30px;box-shadow:0 0 0 2px #C9A24B,0 0 0 3px #E9C877,0 3px 6px rgba(0,0,0,.25),inset 0 1px 3px rgba(255,255,255,.4)}
+.medal.sm svg{width:15px;height:15px} .medal.sm::after{top:3px;left:6px;width:12px;height:7px}
 
 /* bottom nav */
-#nav{position:sticky;bottom:0;z-index:25;display:flex;background:rgba(255,252,246,.94);
-  backdrop-filter:blur(8px);border-top:1px solid var(--line)}
-#nav button{flex:1;background:none;border:none;padding:11px 0 calc(11px + env(safe-area-inset-bottom));
-  font-family:'Fredoka';font-weight:600;font-size:11px;color:var(--ink-soft);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-#nav button .i{font-size:21px}
+#nav{position:sticky;bottom:0;z-index:25;display:flex;gap:8px;padding:8px 14px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(255,252,246,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+#nav button{flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:8px 0 7px;border-radius:16px;color:var(--ink-soft);transition:color .15s, background .15s;min-height:54px;justify-content:center}
+#nav button .i{display:grid;place-items:center;width:46px;height:32px;border-radius:12px;transition:background .15s, transform .12s}
+#nav button .lbl{font-family:'Fredoka';font-weight:600;font-size:11.5px;letter-spacing:.2px}
+#nav button:active .i{transform:scale(.9)}
 #nav button.on{color:var(--teal-dd)}
+#nav button.on .i{background:#E7F7F0}
 
 /* confetti + xp float */
 #fx{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
@@ -310,13 +347,15 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 
 /* ===== NEXT-PHASE ADDITIONS ===== */
 /* speaker buttons + audio pulse */
-.spk{display:inline-flex;align-items:center;justify-content:center;border:none;background:#EAF6FE;color:var(--sky-d);
-  border-radius:10px;cursor:pointer;font-size:15px;padding:5px 9px;line-height:1;box-shadow:0 2px 0 #cfe6fa;
-  transition:transform .08s;user-select:none;vertical-align:middle}
-.spk:active{transform:translateY(2px);box-shadow:none}
-.spk.big{font-size:19px;padding:8px 12px}
+.spk{display:inline-flex;align-items:center;justify-content:center;border:none;background:#E7F2FB;color:var(--sky-d);
+  border-radius:999px;cursor:pointer;font-size:16px;width:34px;height:34px;line-height:1;box-shadow:0 2px 0 #c4def3;
+  transition:transform .08s, background .12s;user-select:none;vertical-align:middle}
+.spk:active{transform:translateY(2px);box-shadow:none;background:#d4e8f8}
+.spk.big{font-size:20px;width:42px;height:42px}
 .opt-spk{margin-left:auto}
 .opt-spk .spk{background:#fff;box-shadow:0 2px 0 var(--line)}
+.ipa-pill .sp{font-size:14px;color:var(--sky-d);opacity:.9;margin-top:2px;display:inline-flex}
+.listen-btn .li-ic{display:inline-flex;font-size:20px;vertical-align:middle;margin-right:4px}
 .pulse{animation:pulse .5s ease}
 @keyframes pulse{0%{transform:scale(1)}30%{transform:scale(1.12)}100%{transform:scale(1)}}
 .ipa-pill{position:relative}
@@ -344,6 +383,10 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 .review-card .rv-go{margin-left:auto;width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;
   background:var(--coral);color:#fff;font-size:14px;box-shadow:0 3px 0 var(--coral-d);animation:rvpulse 2s ease-in-out infinite}
 @keyframes rvpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.review-card.done{cursor:default;background:#EAFBF4;border-color:#BfE9DA}
+.review-card.done:active{transform:none}
+.review-card.done .rv-ic{color:var(--teal-dd);box-shadow:0 3px 0 #BfE9DA}
+.review-card.done .rv-meta b{color:var(--teal-dd)}
 
 /* in-lesson listening exercise */
 .big-listen{display:grid;place-items:center;margin:22px 0 6px}
@@ -504,24 +547,24 @@ function genListen(pairs){                       // listening: hear word → cho
   return pairs.map(p=>{
     const target = Math.random()<0.5 ? {w:p.a,o:p.b} : {w:p.b,o:p.a};
     return ex({kind:"Listen & choose", variant:"listen", word:target.w, sub:"Which word did you hear?",
-      options:[opt(target.w,true),opt(target.o)],
-      hint:`Focus on ${p.f}. ${cap(p.a)} = ${p.ia} · ${cap(p.b)} = ${p.ib}. Tap 🔊 to compare.`});
+      options:[opt(target.w,true),opt(target.o)], fam:p.f,
+      hint:`These two sound close: “${p.a}” and “${p.b}”. Tap 🔊 and listen for the difference.`});
   });
 }
 function genPairIPA(pairs){                       // choose correct IPA for one word of the pair
   return pairs.map(p=>{
     const pickA = Math.random()<0.5;
     const w = pickA?p.a:p.b, right = pickA?p.ia:p.ib, wrong = pickA?p.ib:p.ia;
-    return ex({kind:"Choose the IPA", prompt:w, options:[opt(right,true),opt(wrong)],
-      hint:`${p.f}. ${cap(p.a)} = ${p.ia}, ${cap(p.b)} = ${p.ib}.`});
+    return ex({kind:"Choose the IPA", prompt:w, options:[opt(right,true),opt(wrong)], fam:p.f,
+      hint:`“${p.a}” = ${p.ia} and “${p.b}” = ${p.ib}. The little difference is the sound in the middle.`});
   });
 }
 function genReadPair(pairs){                       // IPA → word (minimal-pair confusion)
   return pairs.map(p=>{
     const pickA = Math.random()<0.5;
     const ipa = pickA?p.ia:p.ib, right = pickA?p.a:p.b, wrong = pickA?p.b:p.a;
-    return ex({kind:"Read the IPA", variant:"word", prompt:ipa, options:[opt(right,true),opt(wrong)],
-      hint:`${p.f}. ${ipa} → ${pickA?p.a:p.b}.`});
+    return ex({kind:"Read the IPA", variant:"word", prompt:ipa, options:[opt(right,true),opt(wrong)], fam:p.f,
+      hint:`${ipa} is the word “${pickA?p.a:p.b}”. Compare it with “${pickA?p.b:p.a}”.`});
   });
 }
 function genVocabRead(list, sub){                  // IPA → word for real vocabulary
@@ -575,17 +618,17 @@ function distractors(correct, pool, n){
   return out;
 }
 function genDiphIdentify(){
-  return DIPH_WORDS.map(([w,g])=>ex({kind:"Which glide?", variant:"identify", prompt:w, sub:"Which diphthong do you hear?",
-    options:[opt(g,true),...distractors(g,DIPHS,3).map(d=>opt(d))],
-    hint:`“${w}” glides ${g}. Tap and listen for the slide between two vowels.`}));
+  return DIPH_WORDS.map(([w,g])=>ex({kind:"Listen & choose", variant:"identify", prompt:w, sub:"Which sound do you hear?",
+    options:[opt(g,true),...distractors(g,DIPHS,3).map(d=>opt(d))], fam:"glide "+g,
+    hint:`Say “${w}” slowly and notice how the sound moves. Tap 🔊 to hear it again.`}));
 }
 function genDiphRead(){
   return DIPH_WORDS.map(([w,g,ipa])=>ex({kind:"Read the IPA", variant:"word", prompt:ipa,
-    options:[opt(w,true),opt(pickConfuser(w))], hint:`${ipa} → “${w}” (glide ${g}).`}));
+    options:[opt(w,true),opt(pickConfuser(w))], fam:"glide "+g, hint:`${ipa} is the word “${w}”.`}));
 }
 function genDiphListen(){
   return DIPH_WORDS.map(([w,g,ipa])=>ex({kind:"Listen & choose", variant:"listen", word:w, sub:"Which word did you hear?",
-    options:[opt(w,true),opt(pickConfuser(w))], hint:`“${w}” — ${ipa}, glide ${g}. Tap 🔊 to replay.`}));
+    options:[opt(w,true),opt(pickConfuser(w))], fam:"glide "+g, hint:`That was “${w}”. Tap 🔊 to hear it again.`}));
 }
 
 
@@ -619,12 +662,12 @@ const COURSE = [
   video:{key:"lesson1", title:"Lesson 1 — Short & Long Vowels", caption:"How vowel length changes meaning"},
   learn:{
     heading:"Short vs Long Vowels",
-    intro:"Vowels carry the music of English. Long vowels are <b>longer & steady</b>; short vowels are <b>quick & light</b>. Your mouth shape matters!",
+    intro:"Vowels carry the music of English. Long vowels are <b>longer & steady</b>; short vowels are <b>quick & light</b>. Tap any sound to listen.",
     groups:[
       {title:"Short vowels", cls:"", items:[["ɪ","ship"],["ʌ","cup"],["ɒ","hot"],["ʊ","book"],["ə","sofa"],["e","bed"],["æ","cat"]]},
       {title:"Long vowels", cls:"", items:[["iː","sheep"],["ɑː","car"],["ɔː","door"],["uː","food"],["ɜː","bird"]]}
     ],
-    note:"Tip: /iː/ in <i>sheep</i> is long & smiley; /ɪ/ in <i>ship</i> is short & relaxed."
+    note:"Tip: tap each word, then say it back. Hearing it a few times is all it takes."
   },
   exercises:[
     // TYPE A — choose correct IPA
@@ -681,12 +724,13 @@ const COURSE = [
   id:"s2", title:"Diphthongs", short:"Diphthongs", icon:"🌀", color:"sky",
   video:{key:"diphthongs", title:"Lesson 2 — Diphthongs", caption:"Gliding between two vowel sounds"},
   learn:{
-    heading:"Gliding Vowels",
-    intro:"A diphthong <b>glides</b> from one vowel into another inside a single syllable. They are all <b>long</b> sounds — let them flow.",
+    heading:"Gliding Sounds",
+    intro:"A <b>diphthong</b> glides from one vowel into another in a single breath. Let your mouth move smoothly — don't stop halfway.",
     groups:[
-      {title:"The 8 diphthongs", cls:"", items:[["eɪ","bay"],["aɪ","buy"],["ɔɪ","toy"],["aʊ","town"],["əʊ","low"],["ɪə","beer"],["eə","fair"],["ʊə","poor"]]}
+      {title:"Closing glides", cls:"", items:[["eɪ","day"],["aɪ","my"],["ɔɪ","boy"],["aʊ","now"],["əʊ","go"]]},
+      {title:"Centring glides", cls:"", items:[["ɪə","here"],["eə","hair"],["ʊə","tour"]]}
     ],
-    note:"Say each one slowly: feel your mouth move from the first sound into the second."
+    note:"Say “go” slowly: /əʊ/ starts open, then rounds. One smooth move."
   },
   exercises:[
     // TYPE A
@@ -712,21 +756,21 @@ const COURSE = [
       options:[opt("/eɪ/"),opt("/aɪ/"),opt("/ɔɪ/",true),opt("/aʊ/"),opt("/əʊ/"),opt("/ɪə/"),opt("/eə/"),opt("/ʊə/")],
       hint:"“soil” uses /ɔɪ/ as in toy."}),
     // TYPE C — identify diphthong
-    ex({kind:"Which glide?", variant:"identify", prompt:"proud", sub:"Which diphthong do you hear?",
+    ex({kind:"Listen & choose", variant:"identify", prompt:"proud", sub:"Which sound do you hear?",
       options:[opt("/aʊ/",true),opt("/əʊ/"),opt("/aɪ/"),opt("/ɔɪ/")], hint:"“proud” opens into /aʊ/ as in town."}),
-    ex({kind:"Which glide?", variant:"identify", prompt:"rain", sub:"Which diphthong do you hear?",
+    ex({kind:"Listen & choose", variant:"identify", prompt:"rain", sub:"Which sound do you hear?",
       options:[opt("/eɪ/",true),opt("/aɪ/"),opt("/ɪə/"),opt("/eə/")], hint:"“rain” glides /eɪ/ as in bay."}),
-    ex({kind:"Which glide?", variant:"identify", prompt:"sigh", sub:"Which diphthong do you hear?",
+    ex({kind:"Listen & choose", variant:"identify", prompt:"sigh", sub:"Which sound do you hear?",
       options:[opt("/aɪ/",true),opt("/eɪ/"),opt("/ɔɪ/"),opt("/əʊ/")], hint:"“sigh” glides /aɪ/ as in buy."}),
-    ex({kind:"Which glide?", variant:"identify", prompt:"choice", sub:"Which diphthong do you hear?",
+    ex({kind:"Listen & choose", variant:"identify", prompt:"choice", sub:"Which sound do you hear?",
       options:[opt("/ɔɪ/",true),opt("/aʊ/"),opt("/aɪ/"),opt("/əʊ/")], hint:"“choice” uses /ɔɪ/ as in toy."}),
-    ex({kind:"Which glide?", variant:"identify", prompt:"coat", sub:"Which diphthong do you hear?",
+    ex({kind:"Listen & choose", variant:"identify", prompt:"coat", sub:"Which sound do you hear?",
       options:[opt("/əʊ/",true),opt("/aʊ/"),opt("/ɔɪ/"),opt("/eɪ/")], hint:"“coat” glides /əʊ/ as in low."}),
-    ex({kind:"Which glide?", variant:"identify", prompt:"hear", sub:"Which diphthong do you hear?",
+    ex({kind:"Listen & choose", variant:"identify", prompt:"hear", sub:"Which sound do you hear?",
       options:[opt("/ɪə/",true),opt("/eə/"),opt("/ʊə/"),opt("/eɪ/")], hint:"“hear” glides /ɪə/ as in beer."}),
-    ex({kind:"Which glide?", variant:"identify", prompt:"bear", sub:"Which diphthong do you hear?",
+    ex({kind:"Listen & choose", variant:"identify", prompt:"bear", sub:"Which sound do you hear?",
       options:[opt("/eə/",true),opt("/ɪə/"),opt("/ɜː/"),opt("/aɪ/")], hint:"“bear” glides /eə/ as in fair."}),
-    ex({kind:"Which glide?", variant:"identify", prompt:"buy", sub:"Which diphthong do you hear?",
+    ex({kind:"Listen & choose", variant:"identify", prompt:"buy", sub:"Which sound do you hear?",
       options:[opt("/aɪ/",true),opt("/eɪ/"),opt("/ɔɪ/"),opt("/aʊ/")], hint:"“buy” glides /aɪ/."}),
     // ——— expanded pools (PRIORITY 1): more diphthong identify / read / listen ———
     ...genDiphIdentify(),
@@ -750,7 +794,7 @@ const COURSE = [
   },
   exercises:[
     // TYPE A
-    ex({kind:"Choose the IPA", prompt:"wealthy", options:[opt("/ˈwelθi/",true),opt("/ˈwelði/")], hint:"“wealthy” uses voiceless /θ/ (think). /ð/ would buzz."}),
+    ex({kind:"Choose the IPA", prompt:"wealthy", options:[opt("/ˈwelθi/",true),opt("/ˈwelði/")], hint:"“wealthy” has the soft “th” (no buzz), like in “think”."}),
     ex({kind:"Choose the IPA", prompt:"chimney", options:[opt("/ˈtʃɪmni/",true),opt("/ˈtʃemni/")], hint:"First vowel is short /ɪ/, and the start is /tʃ/."}),
     ex({kind:"Choose the IPA", prompt:"tongue", options:[opt("/tʌŋ/",true),opt("/tɒŋ/")], hint:"“tongue” = /tʌŋ/ ending in the /ŋ/ sound."}),
     ex({kind:"Choose the IPA", prompt:"humble", options:[opt("/ˈhʌmbl/",true),opt("/ˈhʊmbl/")], hint:"The “u” here is the short /ʌ/ as in cup."}),
@@ -786,7 +830,7 @@ const COURSE = [
   video:{key:"bonus", title:"Bonus — Final Review", caption:"Putting it all together"},
   learn:{
     heading:"Everything You've Learned",
-    intro:"Let's tie it together — vowels, diphthongs and consonants working as one system.",
+    intro:"Let's bring it all together — everything you've been hearing, mixed into one relaxed round.",
     groups:[
       {title:"Recap", cls:"", items:[["iː","sheep"],["ɪ","ship"],["eɪ","bay"],["θ","think"],["ð","this"]]}
     ],
@@ -805,8 +849,8 @@ const COURSE = [
       options:[opt("sing",true),opt("seen"),opt("sin")], hint:"“sing” ends in the nasal /ŋ/."}),
     ex({kind:"Read the IPA", variant:"word", prompt:"/ˈkætəɡəri/", options:[opt("category",true),opt("cattery")], hint:"Four syllables starting /ˈkæt…/ → category."}),
     ex({kind:"Choose the IPA", prompt:"world", options:[opt("/wɜːld/",true),opt("/wɔːld/")], hint:"“world” uses the /ɜː/ of bird, not /ɔː/."}),
-    ex({kind:"Spot the sound", variant:"identify", prompt:"/ð/", sub:"Which word has the VOICED “th”?",
-      options:[opt("those",true),opt("think"),opt("thumb")], hint:"“think”/“thumb” are voiceless /θ/. “those” buzzes → /ð/."}),
+    ex({kind:"Spot the sound", variant:"identify", prompt:"/ð/", sub:"Which word has the buzzing “th”?",
+      options:[opt("those",true),opt("think"),opt("thumb")], hint:"“think” and “thumb” have a soft “th”. “those” buzzes — feel it in your throat."}),
     ex({kind:"Choose the IPA", prompt:"queue", options:[opt("/kjuː/",true),opt("/kweɪ/")], hint:"“queue” is simply /kjuː/ — a /k/, a /j/ glide, then long /uː/."}),
     // ——— mixed final pool (PRIORITY 1): vowels + diphthongs + consonants ———
     ...genReadPair(VOWEL_PAIRS),
@@ -825,15 +869,28 @@ const COURSE = [
 /* =====================================================================
    5. BADGE SYSTEM  —  registry of every earnable badge.
    ===================================================================== */
-const BADGES = {
-  starter:            {em:"🚀", name:"Starter",            desc:"Began your journey"},
-  vowel_master:       {em:"🅰️", name:"Vowel Master",        desc:"Cleared all vowels"},
-  diphthong_hero:     {em:"🌀", name:"Diphthong Hero",      desc:"Mastered the glides"},
-  consonant_champion: {em:"🛡️", name:"Consonant Champ",     desc:"Tamed the consonants"},
-  master:             {em:"👑", name:"Pronunciation Master",desc:"Completed the course"},
-  hot_streak:         {em:"🔥", name:"Hot Streak",          desc:"5 correct in a row"},
-  flawless:           {em:"💎", name:"Flawless",            desc:"A perfect stage"}
+// SVG glyphs for the medallion badges (match the screenshot's coin look)
+const BADGE_SVG = {
+  compass:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 11 11 8.5 15.5 13 13" fill="currentColor" stroke="none"/></svg>',
+  letterA:'<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><text x="12" y="18" font-family="Fredoka,sans-serif" font-size="17" font-weight="700" text-anchor="middle">A</text></svg>',
+  swap:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  crown:'<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M3 18l-2-9 6 4 5-8 5 8 6-4-2 9z"/></svg>',
+  flame:'<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2c2 4-2 5-2 8a2 2 0 0 0 4 0c2 2 3 4 3 6a5 5 0 0 1-10 0c0-4 3-6 5-14z"/></svg>',
+  gem:'<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M6 3h12l4 6-10 12L2 9z" opacity=".95"/></svg>'
 };
+const BADGES = {
+  starter:            {ic:"compass", tint:"teal",  name:"Starter",             desc:"Began your journey"},
+  vowel_master:       {ic:"letterA", tint:"coral", name:"Vowel Master",         desc:"Cleared all vowels"},
+  diphthong_hero:     {ic:"swap",    tint:"sky",   name:"Diphthong Hero",       desc:"Mastered the glides"},
+  consonant_champion: {ic:"shield",  tint:"navy",  name:"Consonant Champ",      desc:"Tamed the consonants"},
+  master:             {ic:"crown",   tint:"navy",  name:"Pronunciation Master", desc:"Completed the course"},
+  hot_streak:         {ic:"flame",   tint:"coral", name:"Hot Streak",           desc:"5 correct in a row"},
+  flawless:           {ic:"gem",     tint:"teal",  name:"Flawless",             desc:"A perfect stage"}
+};
+function badgeMedal(b, locked){
+  return `<span class="medal ${b.tint} ${locked?'locked':''}">${BADGE_SVG[b.ic]||""}</span>`;
+}
 
 /* =====================================================================
    2. PERSISTENCE LAYER  —  browser localStorage with in-memory fallback.
@@ -1025,11 +1082,13 @@ function playWord(word, src, el){
   Audio$.play(word, src);
   if(el){ el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse"); }
 }
+// clean SVG speaker glyph (replaces plain emoji for a more tappable look)
+const SPK_SVG = '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="4 9 4 15 8 15 13 19 13 5 8 9" fill="currentColor" stroke="none"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>';
 // small reusable speaker control (a SPAN so it can live inside .opt buttons)
 function speaker(word, src, extra){
   if(!word) return "";
   const s = src ? ` data-src="${src}"` : "";
-  return `<span class="spk ${extra||''}" role="button" data-action="speak" data-word="${word}"${s} aria-label="Play ${word}">🔊</span>`;
+  return `<span class="spk ${extra||''}" role="button" data-action="speak" data-word="${word}"${s} aria-label="Play ${word}">${SPK_SVG}</span>`;
 }
 const isWordLabel = (lbl)=> lbl && !/^\s*\//.test(lbl);   // a word, not an /ipa/ token
 
@@ -1097,9 +1156,11 @@ function renderHUD(){
 }
 function renderNav(){
   const learnOn = view.name==="map"||view.name==="stage"||view.name==="done";
+  const mapIc = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21"/><line x1="8" y1="3" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="21"/></svg>';
+  const userIc = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>';
   document.getElementById("nav").innerHTML = `
-    <button class="${learnOn?'on':''}" data-action="goMap"><span class="i">🗺️</span>Learn</button>
-    <button class="${view.name==='profile'?'on':''}" data-action="goProfile"><span class="i">🧑‍🚀</span>Profile</button>`;
+    <button class="${learnOn?'on':''}" data-action="goMap"><span class="i">${mapIc}</span><span class="lbl">Learn</span></button>
+    <button class="${view.name==='profile'?'on':''}" data-action="goProfile"><span class="i">${userIc}</span><span class="lbl">Profile</span></button>`;
 }
 
 /* ---------- 10a. STAGE MAP ---------- */
@@ -1111,9 +1172,10 @@ function renderMap(){
     const done = st.completed;
     const cls = done?"done":(open?"open":"locked");
     const side = i%2===0 ? "c" : (i%4===1?"l":"r");
-    const badgeDot = done ? `<span class="badge-dot">${BADGES[s.reward.badge]?.em||"⭐"}</span>` : "";
+    const badgeDot = done && BADGES[s.reward.badge] ? `<span class="badge-dot">${badgeMedal(BADGES[s.reward.badge]).replace('class="medal ','class="medal sm ')}</span>` : "";
     const start = open && !done ? `<span class="start-flag">START</span>` : "";
-    const face = done ? "✅" : (open ? s.icon : "🔒");
+    const checkSVG = '<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 13 10 18 19 6"/></svg>';
+    const face = done ? checkSVG : (open ? s.icon : "🔒");
     nodes += (i>0?`<div class="connector"></div>`:"") + `
       <div class="node-wrap" data-side="${i===0?'c':(i%2?'l':'r')}">
         <div class="node ${cls}" data-action="${open?'openStage':''}" data-id="${s.id}">
@@ -1133,7 +1195,7 @@ function renderMap(){
         <small>Tap to change goal (20 / 50 / 100)</small>
       </div>
     </div>`;
-  // PRIORITY 3 — Today's Review card (only when there's something to recycle)
+  // PRIORITY 3 — Today's Review card (shows a completed state when empty)
   const reviewCount = reviewPoolCount();
   const reviewCard = reviewCount>0 ? `
     <div class="card review-card" data-action="startReview">
@@ -1143,7 +1205,14 @@ function renderMap(){
         <span>${reviewCount} sound${reviewCount>1?"s":""} to refresh — a quick 2-minute warm-up.</span>
       </div>
       <div class="rv-go">▶</div>
-    </div>` : "";
+    </div>` : `
+    <div class="card review-card done">
+      <div class="rv-ic">✓</div>
+      <div class="rv-meta">
+        <b>Today's Review</b>
+        <span>All caught up — no review needed right now. Nice work!</span>
+      </div>
+    </div>`;
   $screen().innerHTML = `
     <div class="hero">
       <span class="logo">✦ TOUCH ENGLISH</span>
@@ -1156,16 +1225,39 @@ function renderMap(){
 }
 
 /* ---------- 10b. STAGE FLOW (Video → Learn → Exercises → Reward) ---------- */
-// how many questions to serve per stage session (keeps a session focused &
-// replayable even though the bank holds 80–120). Welcome stays tiny.
-const STAGE_QUESTION_CAP = 18;
+// Keep a single session short & satisfying even though the bank is large.
+const STAGE_QUESTION_CAP = 16;
+// SOFT GROUPED SEQUENCING (learning-flow improvement):
+// instead of fully random questions, keep similar-sound questions together in
+// short blocks of 4–6, then transition naturally to another sound family.
+// Lightweight: just group by the internal `fam` tag, no scoring or tracking.
 function buildQueue(s){
   const all = s.exercises.slice();
   if(s.id==="s0") return all;                 // welcome = its single check
-  const shuffled = shuffle(all);              // PRIORITY 1: randomize order
-  const cap = Math.min(STAGE_QUESTION_CAP, shuffled.length);
-  // sprinkle any pending review items in first (PRIORITY 3 hook)
-  return shuffled.slice(0, cap);
+
+  // bucket by sound family (questions without a fam tag → "general" vocab pool)
+  const fams = new Map();
+  for(const q of all){
+    const key = q.fam || "_general";
+    if(!fams.has(key)) fams.set(key, []);
+    fams.get(key).push(q);
+  }
+  // shuffle questions inside each family, and shuffle the order families appear
+  const famKeys = shuffle([...fams.keys()]);
+  for(const k of famKeys) fams.set(k, shuffle(fams.get(k)));
+
+  // emit families as blocks of 4–6 until we reach the cap, so the learner gets
+  // repeated exposure to one sound before moving on. General vocab comes last.
+  famKeys.sort((a,b)=> (a==="_general") - (b==="_general"));   // general → end
+  const queue = [];
+  for(const k of famKeys){
+    if(queue.length >= STAGE_QUESTION_CAP) break;
+    const pool = fams.get(k);
+    const blockSize = Math.min(pool.length, 4 + Math.floor(Math.random()*3)); // 4–6
+    const room = STAGE_QUESTION_CAP - queue.length;
+    queue.push(...pool.slice(0, Math.min(blockSize, room)));
+  }
+  return queue.slice(0, STAGE_QUESTION_CAP);
 }
 function startStage(id){
   const s = COURSE.find(x=>x.id===id);
@@ -1185,27 +1277,40 @@ function sessionExercises(s){ return (session && session.queue) ? session.queue 
 const REVIEW_STAGE = { id:"review", title:"Today's Review", short:"Review", icon:"🔁", color:"coral",
   exercises:[], reward:{ xp:0, title:"Review complete!", line:"" } };
 function findStage(id){ return id==="review" ? REVIEW_STAGE : COURSE.find(x=>x.id===id); }
-// gather a few extra questions that drill the learner's weakest sounds
+// gather a few extra questions that drill the learner's weakest sounds.
+// Deterministic (no randomness) so the count and the actual session agree.
 function weakSoundQuestions(){
   const weakTokens = Object.entries(S.weak).filter(([k,v])=>v>=2).sort((a,b)=>b[1]-a[1]).map(e=>e[0]);
   if(!weakTokens.length) return [];
-  // pull matching minimal-pair IPA questions from the bank
+  const strip = t => t.replace(/\//g,"");
   const out=[];
   for(const p of PAIRS){
-    if(weakTokens.some(t=>p.ia.includes(t.replace(/\//g,"")) || p.ib.includes(t.replace(/\//g,"")) || p.f.includes(t.replace(/\//g,"")))){
-      out.push(ex({kind:"Choose the IPA", prompt:p.a, options:[opt(p.ia,true),opt(p.ib)],
+    const ia=strip(p.ia), ib=strip(p.ib), f=strip(p.f);
+    if(weakTokens.some(t=>{ const s=strip(t); return ia.includes(s)||ib.includes(s)||f.includes(s); })){
+      out.push(ex({kind:"Choose the IPA", prompt:p.a, options:[opt(p.ia,true),opt(p.ib)], fam:p.f,
         hint:`${p.f}. ${cap(p.a)} = ${p.ia}, ${cap(p.b)} = ${p.ib}.`}));
     }
     if(out.length>=6) break;
   }
   return out;
 }
+// the single source of truth for the review pool (deduped). Both the count
+// and the session are built from this, so they can never disagree.
+function buildReviewPool(){
+  const seen = new Set();
+  const pool = [];
+  for(const q of [...S.review, ...weakSoundQuestions()]){
+    const k = reviewKey(q);
+    if(seen.has(k)) continue;
+    seen.add(k); pool.push(q);
+  }
+  return pool;
+}
 function reviewPoolCount(){
-  return Math.min(15, S.review.length + weakSoundQuestions().length);
+  return Math.min(15, buildReviewPool().length);
 }
 function startReview(){
-  const pool = shuffle([...S.review, ...weakSoundQuestions()]);
-  const queue = pool.slice(0, 15);
+  const queue = shuffle(buildReviewPool()).slice(0, 15);
   if(!queue.length){ return; }
   REVIEW_STAGE.exercises = queue;
   session = { stageId:"review", step:"quiz", qi:0, correct:0, total:queue.length, earned:0,
@@ -1321,8 +1426,8 @@ function ipaPills(items, cls){
   return `<div class="ipa-grid">${items.map(it=>{
     const word = it[1]||"";
     return `
-    <div class="ipa-pill ${cls||''}" data-action="playword" data-word="${word}">
-      <b class="ipa">/${it[0]}/</b>${word?`<span>${word} 🔊</span>`:""}
+    <div class="ipa-pill ${cls||''}" data-action="playword" data-word="${word}" aria-label="Play ${word}">
+      <b class="ipa">${it[0]}</b>${word?`<span class="w">${word}</span><span class="sp">${SPK_SVG}</span>`:""}
     </div>`;}).join("")}</div>`;
 }
 function renderLearn(s){
@@ -1378,7 +1483,7 @@ function renderExercise(s){
   } else if(q.variant==="listen"){
     // listening practice INSIDE the lesson: hear the word, then pick it
     promptHTML = `<div class="q-sub">${q.sub||"Listen, then choose the word you hear"}</div>
-                  <div class="big-listen"><button class="listen-btn" data-action="listen" data-word="${q.word}"${q.audioSrc?` data-src="${q.audioSrc}"`:""}>🔊 Tap to listen</button></div>`;
+                  <div class="big-listen"><button class="listen-btn" data-action="listen" data-word="${q.word}"${q.audioSrc?` data-src="${q.audioSrc}"`:""}><span class="li-ic">${SPK_SVG}</span> Tap to listen</button></div>`;
   } else { // choose IPA for a word
     promptHTML = `<div class="q-sub">${q.sub||"Choose the correct IPA for"}</div>
                   <div class="q-prompt"><span class="big">${q.prompt}</span> ${speaker(q.prompt,q.audioSrc,"big")}</div>`;
@@ -1435,9 +1540,15 @@ function checkAnswer(){
     session.correct++;
     let gain = 10 + (S.combo>=5?5:0);          // 4. XP per correct + combo bonus
     session.earned += gain;
-    // PRIORITY 6: ease off a weak sound when answered right
     const cl = opts.find(o=>o.correct).label;
-    if(!isWordLabel(cl) && S.weak[cl]) S.weak[cl] = Math.max(0, S.weak[cl]-1);
+    if(session.isReview){
+      // PRIORITY 3 FIX: a correct review answer clears the item immediately —
+      // remove it from the pending pool AND zero its weak-sound counter so the
+      // weak-sound generator stops re-creating it.
+      clearFromReview(q);
+    } else if(!isWordLabel(cl) && S.weak[cl]){
+      S.weak[cl] = Math.max(0, S.weak[cl]-1);  // normal lesson: ease off a weak sound
+    }
     const okMsg = q.okMsg || pick(PRAISE);
     if(S.combo===5 && !S.badges.hot_streak){ S.badges.hot_streak=true; setTimeout(()=>miniBadge("hot_streak"),300); }
     if(COMBO_LINES[S.combo]) comboFlash(COMBO_LINES[S.combo]);
@@ -1466,6 +1577,27 @@ function addToReview(q){
   S.review.unshift(JSON.parse(JSON.stringify(q)));
   if(S.review.length>30) S.review.length = 30;
 }
+// PRIORITY 3 FIX: clear a correctly-answered review item so it doesn't reappear.
+function clearFromReview(q){
+  const key = reviewKey(q);
+  S.review = S.review.filter(r=>reviewKey(r)!==key);
+  const strip = t => t.replace(/\//g,"");
+  // 1) clear the exact correct-option IPA key if it's tracked as weak
+  const correctLabel = (q.options||[]).find(o=>o.correct);
+  if(correctLabel && !isWordLabel(correctLabel.label)) delete S.weak[correctLabel.label];
+  // 2) clear ANY weak key (which are full IPA transcriptions like "/biːt/")
+  //    whose sound contains one of the focus tokens this question drilled, so the
+  //    weak-sound generator can no longer produce a phantom item for it.
+  const focusTokens = [];
+  if(q.fam) (q.fam.match(/\/[^\/]+\//g)||[]).forEach(t=>focusTokens.push(strip(t)));
+  (q.options||[]).forEach(o=>{ if(!isWordLabel(o.label)) focusTokens.push(strip(o.label)); });
+  if(focusTokens.length){
+    for(const k of Object.keys(S.weak)){
+      const ks = strip(k);
+      if(focusTokens.some(t=> ks.includes(t) || t.includes(ks) )) delete S.weak[k];
+    }
+  }
+}
 function comboFlash(txt){ const c=document.getElementById("comboMsg"); if(!c)return; c.textContent=txt; c.classList.remove("show"); void c.offsetWidth; c.classList.add("show"); }
 
 function feedbackOK(msg, gain){
@@ -1475,12 +1607,14 @@ function feedbackOK(msg, gain){
     <div class="fb-head"><span class="ic">✓</span><b>${msg}</b><span class="xpgain">+${gain} XP</span></div>
     <button class="btn" data-action="next">Continue</button></div>`;
 }
+const GENTLE = ["Almost there!","So close — listen again","This sound is slightly different","Let's try a similar word",
+  "Nearly! Tap 🔊 and compare","Good attempt — here's the difference","Close one! Listen once more"];
 function feedbackNO(hint){
   const fb=document.getElementById("feedback");
   fb.className="no show";
   fb.innerHTML=`<div class="fb-inner">
-    <div class="fb-head"><span class="ic">↻</span><b>Not quite — here's why</b></div>
-    <div class="fb-hint">💡 ${hint||"Listen again to the vowel length and mouth shape."}</div>
+    <div class="fb-head"><span class="ic">↻</span><b>${pick(GENTLE)}</b></div>
+    <div class="fb-hint">💡 ${hint||"Tap 🔊 and listen for the small difference between the two words."}</div>
     <button class="btn" data-action="next">Got it, continue</button></div>`;
 }
 function nextQuestion(){
@@ -1496,9 +1630,9 @@ function nextQuestion(){
    ===================================================================== */
 function finishStage(s){
   if(session.isReview){                                 // PRIORITY 3: review wrap-up
-    // clear the items the learner just reviewed from the pending pool
-    const reviewedKeys = new Set(session.queue.map(reviewKey));
-    S.review = S.review.filter(r=>!reviewedKeys.has(reviewKey(r)));
+    // NOTE: correctly-answered items are already removed during checkAnswer via
+    // clearFromReview(). Items the learner missed stay in S.review so they can
+    // come back later. So we do NOT blanket-clear the queue here.
     save();
     session.step="reward";
     sfx("reward"); confetti(90);
@@ -1552,7 +1686,7 @@ function renderReward(s){
       <h2>${r.title}</h2>
       <div class="sub">Stage complete${session.total?` · ${session.correct}/${session.total} first-try`:""}</div>
 
-      ${r.badge?`<div class="badge-card"><div class="em">${b.em}</div><b>${b.name} Badge</b><span>${b.desc}</span></div>`:""}
+      ${r.badge?`<div class="badge-card">${badgeMedal(b)}<b>${b.name} Badge</b><span>${b.desc}</span></div>`:""}
 
       <div class="tally">
         <div class="tally-row" style="animation-delay:.05s"><span class="ic">⚡</span><span class="lbl">XP this stage</span><span class="val">+${session.earned + (S.stages[s.id]?r.xp:0)}</span></div>
@@ -1578,7 +1712,7 @@ function renderCourseComplete(){
       <div class="burst">👑</div>
       <h2>TOUCH Pronunciation Master!</h2>
       <div class="sub">You completed the entire course 🎓</div>
-      <div class="badge-card" style="margin-top:14px"><div class="em">${BADGES.master.em}</div>
+      <div class="badge-card" style="margin-top:14px">${badgeMedal(BADGES.master)}
         <b>${BADGES.master.name}</b><span>The highest TOUCH honour</span></div>
       <div class="tally">
         <div class="tally-row"><span class="ic">⚡</span><span class="lbl">Total XP</span><span class="val">${S.xp}</span></div>
@@ -1597,18 +1731,23 @@ function renderProfile(){
   const stagesDone = COURSE.filter(s=>S.stages[s.id]?.completed).length;
   const shelf = Object.keys(BADGES).map(id=>{
     const b=BADGES[id], have=!!S.badges[id];
-    return `<div class="bcell ${have?'':'locked'}"><div class="em">${b.em}</div><div class="n">${b.name}</div></div>`;
+    return `<div class="bcell ${have?'':'locked'}">${badgeMedal(b, !have)}<div class="n">${b.name}</div></div>`;
   }).join("");
   $screen().innerHTML = `
     <div class="profile">
       <div class="pf-head">
-        <div class="av">🧑‍🚀</div>
-        <div><h2>TOUCH Learner</h2><p>Level ${li.lvl} · 🔥 ${S.streak}-day streak</p></div>
+        <div class="av"><span class="av-initials">TL</span><span class="av-lv">Lv ${li.lvl}</span></div>
+        <div class="pf-meta">
+          <h2>TOUCH Learner</h2>
+          <p>🔥 ${S.streak}-day streak</p>
+          <div class="pf-bar"><i style="width:${(li.pct*100).toFixed(0)}%"></i></div>
+          <small>${li.into} / ${li.span} XP to Level ${li.lvl+1}</small>
+        </div>
       </div>
       <div class="stat-grid">
-        <div class="stat"><div class="v">${S.xp}</div><div class="l">Total XP</div></div>
-        <div class="stat"><div class="v">${stagesDone}/${COURSE.length}</div><div class="l">Stages</div></div>
-        <div class="stat"><div class="v">${S.bestCombo}</div><div class="l">Best Combo</div></div>
+        <div class="stat"><div class="si streak">🔥</div><div class="v">${S.streak}</div><div class="l">Day streak</div></div>
+        <div class="stat"><div class="si xp">⚡</div><div class="v">${S.xp}</div><div class="l">Total XP</div></div>
+        <div class="stat"><div class="si done">✓</div><div class="v">${stagesDone}/${COURSE.length}</div><div class="l">Stages</div></div>
       </div>
 
       <div class="sect-title">🎯 Daily Goal</div>
@@ -1630,7 +1769,7 @@ function renderProfile(){
 function miniBadge(id){
   const b=BADGES[id]; const d=document.createElement("div"); d.className="lvlup";
   d.style.background="var(--sun)"; d.style.color="#5a3d00";
-  d.innerHTML=`${b.em} Badge: ${b.name}!`;
+  d.innerHTML=`🏅 ${b.name} Badge!`;
   document.getElementById("fx").appendChild(d); setTimeout(()=>d.remove(),1700); confetti(40);
 }
 
