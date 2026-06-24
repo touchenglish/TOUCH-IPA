@@ -34,12 +34,13 @@
   --good:#4FAE8A; --good-d:#3C8E6F;                              /* Success green (completed) */
   --bad:#C0405C; --bad-d:#9E2E47;                                /* soft maroon-red for "try again" */
   --white:#FFFFFF;
-  /* layered, premium elevation (reference = soft 3D depth, not flat) */
+  /* Apple-inspired elevation: soft, diffuse, low-contrast (never chunky) */
   --shadow:0 6px 0;
-  --soft:0 1px 2px rgba(27,36,51,.05), 0 8px 22px rgba(27,36,51,.10);
-  --soft-lg:0 2px 4px rgba(27,36,51,.06), 0 18px 40px rgba(27,36,51,.14);
-  --soft-sm:0 1px 2px rgba(27,36,51,.05), 0 3px 8px rgba(27,36,51,.07);
-  --r:22px;
+  --soft:0 1px 1px rgba(27,36,51,.04), 0 6px 18px rgba(27,36,51,.07);
+  --soft-lg:0 1px 2px rgba(27,36,51,.05), 0 14px 38px rgba(27,36,51,.11);
+  --soft-sm:0 1px 1px rgba(27,36,51,.04), 0 2px 8px rgba(27,36,51,.06);
+  --hair:rgba(27,36,51,.08);            /* hairline border */
+  --r:22px; --r-lg:20px; --r-md:16px; --r-sm:12px;
   font-family:'Nunito',-apple-system,'Segoe UI','Noto Sans',sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -103,23 +104,42 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 #screen{flex:1;display:flex;flex-direction:column;animation:fade .35s ease both}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .pad{padding:18px 18px 28px}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
-  font-family:'Fredoka';font-weight:700;font-size:16px;color:#fff;cursor:pointer;
-  padding:15px 18px;border:none;border-radius:14px;
-  background:linear-gradient(180deg,#2A4A72,var(--teal));
-  box-shadow:0 2px 5px rgba(20,38,64,.28), 0 8px 18px rgba(20,38,64,.20), inset 0 1px 0 rgba(255,255,255,.14);
-  transition:transform .12s, box-shadow .15s, filter .15s;letter-spacing:.3px;
-}
-.btn:hover{filter:brightness(1.05);box-shadow:0 3px 7px rgba(20,38,64,.30), 0 12px 24px rgba(20,38,64,.22), inset 0 1px 0 rgba(255,255,255,.16)}
-.btn:active{transform:translateY(1px);box-shadow:0 1px 3px rgba(20,38,64,.28), inset 0 1px 0 rgba(255,255,255,.12)}
-.btn.coral{background:linear-gradient(180deg,#9B2A4A,var(--coral));box-shadow:0 2px 5px rgba(111,23,48,.30),0 8px 18px rgba(111,23,48,.20),inset 0 1px 0 rgba(255,255,255,.14)}
-.btn.sun{background:linear-gradient(180deg,#E2C27E,var(--sun));color:#5A3A1E;box-shadow:0 2px 5px rgba(190,150,72,.34),0 8px 18px rgba(190,150,72,.22),inset 0 1px 0 rgba(255,255,255,.3)}
-.btn.ghost{background:#fff;color:var(--teal);border:1.5px solid var(--line);box-shadow:var(--soft-sm)} .btn.ghost:active{box-shadow:0 1px 2px rgba(27,36,51,.06)}
-.btn[disabled]{filter:grayscale(.5) opacity(.45);pointer-events:none}
-.btn.bad{background:linear-gradient(180deg,#C9536C,var(--bad));box-shadow:0 2px 5px rgba(158,46,71,.28),0 8px 18px rgba(158,46,71,.2)}
+/* ===== TOUCH Button System v1.0 — 3D candy buttons ===== */
+.btn{--bb:#16314F;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  font-family:'Fredoka';font-weight:700;font-size:16px;letter-spacing:.3px;color:#fff;cursor:pointer;position:relative;overflow:hidden;
+  padding:15px 20px;border:none;border-radius:16px;
+  background:linear-gradient(180deg,#3A6094 0%,#2A4A72 55%,var(--teal) 100%);
+  box-shadow:0 5px 0 var(--bb),0 12px 20px rgba(20,38,64,.22);
+  transition:transform .16s cubic-bezier(.34,1.56,.64,1), box-shadow .16s cubic-bezier(.34,1.56,.64,1), filter .15s;
+  -webkit-tap-highlight-color:transparent}
+.btn::before{content:"";position:absolute;left:5%;right:5%;top:3px;height:46%;border-radius:14px 14px 18px 18px/14px 14px 30px 30px;
+  background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.05) 85%,rgba(255,255,255,0));pointer-events:none}
+.btn::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-80%;width:45%;transform:skewX(-22deg);
+  background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.5) 50%,rgba(255,255,255,0));
+  animation:btnshine 3s linear infinite;pointer-events:none}
+@keyframes btnshine{0%,72%{left:-80%}92%,100%{left:160%}}
+.btn:active,.btn.pressed{transform:translateY(4px) scale(1.015,.96);box-shadow:0 1px 0 var(--bb),0 4px 8px rgba(20,38,64,.18)}
+.btn.coral{--bb:#6F1730;background:linear-gradient(180deg,#B23A5A 0%,#9B2A4A 55%,var(--coral) 100%);
+  box-shadow:0 5px 0 var(--bb),0 12px 20px rgba(111,23,48,.26)}
+.btn.bad{--bb:#9E2E47;background:linear-gradient(180deg,#D46078 0%,#C9536C 55%,var(--bad) 100%);
+  box-shadow:0 5px 0 var(--bb),0 12px 20px rgba(158,46,71,.26)}
+.btn.sun{--bb:#9A7836;background:linear-gradient(180deg,#F0D89B 0%,#E2C27E 50%,var(--sun) 100%);color:#5A3A1E;
+  box-shadow:0 5px 0 var(--bb),0 12px 20px rgba(190,150,72,.26);animation:btnbreathe 2.4s ease-in-out infinite}
+.btn.sun:active,.btn.sun.pressed{animation:none}
+@keyframes btnbreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+.btn.ghost{--bb:#CBD6E4;background:linear-gradient(180deg,#FFFFFF,#F3F6FA);color:var(--teal);border:1.5px solid var(--line);
+  box-shadow:0 4px 0 var(--bb),0 8px 14px rgba(27,36,51,.08)}
+.btn.ghost::after{display:none}
+.btn.ghost:active,.btn.ghost.pressed{transform:translateY(3px) scale(1.01,.97);box-shadow:0 1px 0 var(--bb)}
+.btn[disabled]{filter:grayscale(.5) opacity(.45);pointer-events:none;animation:none}
+.btn[disabled]::after{display:none}
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{transform:translateY(-2px);filter:brightness(1.07);box-shadow:0 7px 0 var(--bb),0 16px 26px rgba(20,38,64,.26)}
+  .btn.sun:hover{animation:none}
+  .btn:hover:active{transform:translateY(4px) scale(1.015,.96);filter:brightness(1);box-shadow:0 1px 0 var(--bb),0 4px 8px rgba(20,38,64,.18)}
+  .btn.ghost:hover{box-shadow:0 6px 0 var(--bb),0 12px 18px rgba(27,36,51,.10);transform:translateY(-2px)}}
 
-.card{background:var(--white);border:1px solid #E6EBF2;border-radius:18px;box-shadow:var(--soft)}
+.card{background:var(--white);border:1px solid var(--hair);border-radius:var(--r-md);box-shadow:var(--soft)}
 
 /* ---------- STAGE MAP ---------- */
 .hero{padding:22px 18px 6px;text-align:center}
@@ -137,24 +157,26 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
   text-align:center;position:relative;
 }
 .node .disc{
-  width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-size:34px;
-  background:var(--white);border:2px solid var(--line);box-shadow:0 4px 12px rgba(27,36,51,.10);
-  transition:transform .12s, box-shadow .15s;
+  width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-size:34px;position:relative;
+  background:linear-gradient(160deg,#FFFFFF,#EEF3FA);border:2px solid var(--line);
+  box-shadow:0 5px 0 #D6DEEA,0 10px 18px rgba(27,36,51,.14),inset 0 2px 0 rgba(255,255,255,.7);
+  transition:transform .14s cubic-bezier(.34,1.56,.64,1), box-shadow .14s cubic-bezier(.34,1.56,.64,1);
 }
-.node:active .disc{transform:translateY(1px)}
-.node.open .disc{border:none;color:#fff;background:linear-gradient(160deg,#2E5482,#1F3A5F);
-  box-shadow:0 0 0 5px rgba(31,58,95,.14),0 6px 16px rgba(31,58,95,.28)}
-.node.done .disc{border:none;color:#fff;background:linear-gradient(160deg,#5BBE9B,#4FAE8A);
-  box-shadow:0 0 0 2px #D9B56B,0 5px 14px rgba(27,36,51,.16)}
-.node.locked{cursor:not-allowed}
-.node.locked .disc{filter:grayscale(.7);opacity:.55}
+.node:active .disc{transform:translateY(4px);box-shadow:0 1px 0 #D6DEEA,0 4px 8px rgba(27,36,51,.16),inset 0 2px 0 rgba(255,255,255,.7)}
+.node.open .disc{border:none;color:#fff;
+  background:linear-gradient(160deg,#3A6094 0%,#2A4A72 55%,#1F3A5F 100%);
+  box-shadow:0 5px 0 #16314F,0 11px 20px rgba(31,58,95,.30),inset 0 2px 0 rgba(255,255,255,.22)}
+.node.open:active .disc{transform:translateY(4px);box-shadow:0 1px 0 #16314F,0 4px 9px rgba(31,58,95,.26),inset 0 2px 0 rgba(255,255,255,.22)}
+.node.done .disc{border:none;color:#fff;
+  background:linear-gradient(160deg,#5BBE9B 0%,#4FAE8A 55%,#3C8E6F 100%);
+  box-shadow:0 5px 0 #2E7459,0 11px 20px rgba(43,108,80,.28),inset 0 2px 0 rgba(255,255,255,.30),0 0 0 4px #D9B56B}
+.node.done:active .disc{transform:translateY(4px);box-shadow:0 1px 0 #2E7459,0 4px 9px rgba(43,108,80,.24),inset 0 2px 0 rgba(255,255,255,.30),0 0 0 4px #D9B56B}
 .node .nm{font-family:'Fredoka';font-weight:600;font-size:13px;line-height:1.15;color:var(--ink);margin-top:2px}
-.node.locked .nm{color:var(--ink-soft)}
 .node .badge-dot{position:absolute;top:-8px;right:-2px}
 .connector{width:4px;height:30px;border-radius:9px;background:repeating-linear-gradient(180deg,var(--line) 0 6px,transparent 6px 12px)}
 .start-flag{position:absolute;left:50%;transform:translateX(-50%);top:-2px;
   background:var(--teal);color:#fff;font-family:'Fredoka';font-weight:700;font-size:11px;
-  padding:5px 13px;border-radius:99px;box-shadow:0 2px 6px rgba(31,58,95,.28);letter-spacing:.6px;z-index:2}
+  padding:5px 13px;border-radius:99px;box-shadow:0 2px 6px rgba(31,58,95,.28);letter-spacing:.6px;z-index:10}
 
 /* ---------- STAGE INTRO / SECTIONS ---------- */
 .topbar{display:flex;align-items:center;gap:10px;padding:12px 16px 4px}
@@ -194,11 +216,12 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 .block h3{font-size:16px;margin-bottom:10px;color:var(--ink)}
 .ipa-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .ipa-pill{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  padding:13px 6px 10px;border-radius:16px;background:var(--white);border:1px solid var(--line);
-  box-shadow:var(--soft-sm);cursor:pointer;transition:transform .1s, box-shadow .1s}
-.ipa-pill:active{transform:translateY(1px);box-shadow:none}
-.ipa-pill b{font-size:22px;color:var(--coral);line-height:1.1} .ipa-pill .w{font-size:13px;color:var(--ink);font-weight:800}
-.ipa-pill .sp{font-size:12px;color:var(--ink-soft);opacity:.65;margin-top:1px}
+  padding:14px 6px 11px;border-radius:var(--r-md);background:linear-gradient(180deg,#FFFFFF,#FAFBFD);border:1px solid var(--hair);
+  box-shadow:var(--soft-sm);cursor:pointer;transition:transform .18s cubic-bezier(.33,1,.68,1), box-shadow .18s}
+.ipa-pill:hover{transform:translateY(-1px);box-shadow:var(--soft)}
+.ipa-pill:active{transform:translateY(0);box-shadow:var(--soft-sm)}
+.ipa-pill b{font-size:22px;color:var(--coral);line-height:1.1;letter-spacing:-.3px} .ipa-pill .w{font-size:13px;color:var(--ink);font-weight:800}
+.ipa-pill .sp{font-size:12px;color:var(--sky-d);opacity:.7;margin-top:2px}
 .ipa-pill.voiced b{color:var(--plum-d)} .ipa-pill.voiceless b{color:var(--sky-d)}
 @media (max-width:380px){ .ipa-grid{grid-template-columns:repeat(3,1fr)} }
 .note{margin-top:12px;background:#F8EFDB;border:1px solid #E9D4A3;border-radius:14px;padding:12px 14px;
@@ -209,6 +232,8 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 
 /* ---------- EXERCISE ENGINE ---------- */
 .q-kind{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft)}
+.q-lvl{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;font-size:10px;letter-spacing:.5px;color:#fff;vertical-align:middle}
+.q-lvl.easy{background:#4FAE8A}.q-lvl.medium{background:#3E6FA0}.q-lvl.hard{background:#8B1E3F}
 .q-prompt{text-align:center;margin:14px 0 4px}
 .q-prompt .big{font-family:'Fredoka';font-weight:700;font-size:34px;line-height:1.1}
 .q-prompt .big.ipaword{color:var(--teal-dd)}
@@ -235,6 +260,13 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 .opt.chipopt{width:auto;flex:0 0 auto;font-size:20px;justify-content:center}
 .opt.chipopt .key{display:none}
 .opt.shake{animation:shake .4s}
+/* after answering: option body is settled (default cursor, no press lift),
+   but the speaker button inside stays fully tappable so learners can replay
+   and compare both sounds freely. */
+.opt.answered{cursor:default}
+.opt.answered:active{transform:none}
+.opt.answered .opt-spk{cursor:pointer}
+.opt.answered .opt-spk .spk{filter:none;opacity:1}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 .combo{position:absolute;top:54px;left:50%;transform:translateX(-50%);font-family:'Fredoka';font-weight:700;
   color:var(--coral-d);font-size:14px;opacity:0;pointer-events:none}
@@ -287,28 +319,30 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 
 /* ---------- PROFILE ---------- */
 .profile{padding:18px}
-.pf-head{display:flex;align-items:center;gap:16px;padding:20px;border-radius:22px;
-  background:linear-gradient(140deg,#2E5482,#1F3A5F 70%,#142640);color:#fff;
-  box-shadow:0 2px 4px rgba(20,38,64,.18), 0 16px 36px rgba(20,38,64,.28)}
-.pf-head .av{position:relative;width:72px;height:72px;border-radius:50%;flex:none;
-  background:rgba(255,255,255,.18);display:grid;place-items:center;
-  box-shadow:inset 0 0 0 3px rgba(255,255,255,.45), 0 4px 10px rgba(0,0,0,.18)}
-.pf-head .av-initials{font-family:'Fredoka';font-weight:700;font-size:26px;color:#fff;letter-spacing:.5px}
+.pf-head{display:flex;align-items:center;gap:16px;padding:20px;border-radius:var(--r-lg);position:relative;overflow:hidden;
+  background:linear-gradient(150deg,#274973,#1F3A5F 65%,#172B4C);color:#fff;
+  box-shadow:0 1px 2px rgba(20,38,64,.16), 0 14px 34px rgba(20,38,64,.24)}
+.pf-head::before{content:"";position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,0) 40%);pointer-events:none}
+.pf-head .av{position:relative;width:70px;height:70px;border-radius:50%;flex:none;
+  background:linear-gradient(160deg,rgba(255,255,255,.26),rgba(255,255,255,.12));display:grid;place-items:center;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.5), inset 0 2px 6px rgba(255,255,255,.25), 0 4px 12px rgba(0,0,0,.2)}
+.pf-head .av-initials{font-family:'Fredoka';font-weight:700;font-size:25px;color:#fff;letter-spacing:.5px}
 .pf-head .av-lv{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
-  background:var(--sun);color:#5A3A1E;font-family:'Fredoka';font-weight:700;font-size:11px;
-  padding:2px 9px;border-radius:99px;box-shadow:0 2px 5px rgba(0,0,0,.25);white-space:nowrap}
-.pf-meta{flex:1;min-width:0}
-.pf-head h2{font-size:21px;line-height:1.1}
-.pf-head p{font-weight:700;opacity:.95;font-size:13px;margin:3px 0 9px}
-.pf-bar{height:9px;border-radius:99px;background:rgba(255,255,255,.28);overflow:hidden}
-.pf-bar > i{display:block;height:100%;border-radius:99px;background:#fff;transition:width .6s cubic-bezier(.2,.8,.2,1)}
-.pf-head small{display:block;font-size:11px;opacity:.9;font-weight:700;margin-top:5px}
+  background:linear-gradient(180deg,#E2C27E,var(--sun));color:#5A3A1E;font-family:'Fredoka';font-weight:700;font-size:10.5px;
+  padding:2.5px 10px;border-radius:99px;box-shadow:0 2px 6px rgba(20,38,64,.3),inset 0 1px 0 rgba(255,255,255,.4);white-space:nowrap}
+.pf-meta{flex:1;min-width:0;position:relative}
+.pf-head h2{font-size:21px;line-height:1.1;letter-spacing:-.3px}
+.pf-head p{font-weight:600;opacity:.92;font-size:13px;margin:3px 0 10px}
+.pf-bar{height:7px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden;box-shadow:inset 0 1px 1px rgba(0,0,0,.15)}
+.pf-bar > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#E9C988,#D9B56B);transition:width .7s cubic-bezier(.33,1,.68,1)}
+.pf-head small{display:block;font-size:11px;opacity:.85;font-weight:600;margin-top:6px}
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:16px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 8px 12px;text-align:center;box-shadow:var(--soft-sm)}
-.stat .si{width:34px;height:34px;margin:0 auto 6px;border-radius:11px;display:grid;place-items:center;font-size:17px}
-.stat .si.streak{background:#F3E1E6;color:var(--coral-d)} .stat .si.xp{background:#F8EFDB;color:var(--sun-d)} .stat .si.done{background:#E6ECF4;color:var(--teal-dd)}
-.stat .v{font-family:'Fredoka';font-weight:700;font-size:21px;color:var(--ink)}
-.stat .l{font-size:10.5px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.stat{background:#fff;border:1px solid var(--hair);border-radius:var(--r-md);padding:15px 8px 13px;text-align:center;box-shadow:var(--soft-sm)}
+.stat .si{width:36px;height:36px;margin:0 auto 7px;border-radius:11px;display:grid;place-items:center;font-size:17px;box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+.stat .si.streak{background:linear-gradient(160deg,#FBEDF0,#F3E1E6);color:var(--coral-d)} .stat .si.xp{background:linear-gradient(160deg,#FCF4E1,#F8EFDB);color:var(--sun-d)} .stat .si.done{background:linear-gradient(160deg,#EEF3F9,#E6ECF4);color:var(--teal-dd)}
+.stat .v{font-family:'Fredoka';font-weight:700;font-size:21px;color:var(--ink);letter-spacing:-.3px}
+.stat .l{font-size:10px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
 .sect-title{font-family:'Fredoka';font-weight:700;font-size:15px;margin:20px 4px 10px;color:var(--ink)}
 .badge-shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .bcell{background:transparent;border:none;padding:4px 2px;text-align:center;box-shadow:none}
@@ -317,23 +351,23 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 @media (max-width:380px){ .badge-shelf{grid-template-columns:repeat(3,1fr)} }
 /* reusable medallion (profile shelf, reward card, map node) — premium, soft depth */
 .medal{width:54px;height:54px;margin:0 auto;border-radius:50%;display:grid;place-items:center;color:#fff;
-  box-shadow:0 0 0 2.5px #D9B56B, 0 0 0 3.5px rgba(190,150,72,.4), 0 4px 10px rgba(27,36,51,.22), inset 0 2px 4px rgba(255,255,255,.22);
+  box-shadow:0 0 0 1.5px #D9B56B, 0 3px 9px rgba(27,36,51,.18), inset 0 1px 2px rgba(255,255,255,.28);
   position:relative;overflow:hidden;flex:none}
-.medal::after{content:"";position:absolute;top:14%;left:18%;width:42%;height:26%;border-radius:50%;
-  background:rgba(255,255,255,.28);filter:blur(4px);pointer-events:none}
-.medal.teal{background:radial-gradient(circle at 36% 30%,#3A5C86,#1F3A5F 70%,#152840)}
-.medal.coral{background:radial-gradient(circle at 36% 30%,#A8344F,#8B1E3F 70%,#6A1730)}
-.medal.sky{background:radial-gradient(circle at 36% 30%,#4A7BAC,#2C5480 70%,#1F3E60)}
-.medal.navy{background:radial-gradient(circle at 36% 30%,#3A5C86,#1F3A5F 70%,#101F36)}
-.medal.locked{background:radial-gradient(circle at 36% 30%,#EDF1F6,#DCE3EC);box-shadow:0 0 0 2px #CBD4E0,0 2px 6px rgba(27,36,51,.1);color:#AEB7C4}
+.medal::after{content:"";position:absolute;top:0;left:0;right:0;height:48%;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));pointer-events:none}
+.medal.teal{background:radial-gradient(circle at 36% 30%,#3A5C86,#1F3A5F 72%,#172B4C)}
+.medal.coral{background:radial-gradient(circle at 36% 30%,#A8344F,#8B1E3F 72%,#6F1730)}
+.medal.sky{background:radial-gradient(circle at 36% 30%,#4A7BAC,#2C5480 72%,#1F3E60)}
+.medal.navy{background:radial-gradient(circle at 36% 30%,#3A5C86,#1F3A5F 72%,#13243E)}
+.medal.locked{background:radial-gradient(circle at 36% 30%,#EDF1F6,#DCE3EC);box-shadow:0 0 0 1.5px #CBD4E0,0 2px 6px rgba(27,36,51,.08);color:#AEB7C4}
 .medal.locked::after{display:none}
 .medal.lg{width:78px;height:78px} .medal.lg svg{width:32px;height:32px}
-.medal.sm{width:30px;height:30px;box-shadow:0 0 0 1.5px #D9B56B,0 2px 5px rgba(27,36,51,.28),inset 0 1px 2px rgba(255,255,255,.25)}
-.medal.sm svg{width:15px;height:15px} .medal.sm::after{top:12%;left:16%;width:44%;height:28%}
+.medal.sm{width:30px;height:30px;box-shadow:0 0 0 1.25px #D9B56B,0 2px 5px rgba(27,36,51,.22),inset 0 1px 2px rgba(255,255,255,.25)}
+.medal.sm svg{width:15px;height:15px}
 
 /* bottom nav */
 #nav{position:sticky;bottom:0;z-index:25;display:flex;gap:8px;padding:8px 14px calc(8px + env(safe-area-inset-bottom));
-  background:rgba(255,252,246,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+  background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-top:1px solid var(--hair)}
 #nav button{flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;
   padding:8px 0 7px;border-radius:16px;color:var(--ink-soft);transition:color .15s, background .15s;min-height:54px;justify-content:center}
 #nav button .i{display:grid;place-items:center;width:46px;height:32px;border-radius:12px;transition:background .15s, transform .12s}
@@ -353,59 +387,87 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
   animation:pop .5s cubic-bezier(.2,.7,.3,1) both;pointer-events:none}
 .center-msg{padding:60px 24px;text-align:center;color:var(--ink-soft);font-weight:700}
 .fineprint{font-size:11px;color:var(--ink-soft);text-align:center;padding:14px;font-weight:600;opacity:.8}
+/* ---- Sound Reference Card ---- */
+.topbar-title{font-weight:800;color:var(--ink);font-size:15px;flex:1;text-align:center}
+.sc-hero{display:flex;flex-direction:column;align-items:center;gap:12px;padding:26px 16px 22px;
+  background:linear-gradient(180deg,#F4F8FD,#E9F0F8);border:1px solid var(--line);border-radius:20px;margin-bottom:14px}
+.sc-hero.voiced{background:linear-gradient(180deg,#FBF3F7,#F3E6EE)}
+.sc-hero.voiceless{background:linear-gradient(180deg,#F1F6FC,#E4ECF6)}
+.sc-ipa-big{font-size:64px;line-height:1;font-weight:800;color:var(--ink);letter-spacing:1px}
+.sc-hero.voiced .sc-ipa-big{color:var(--plum-d)} .sc-hero.voiceless .sc-ipa-big{color:var(--sky-d)}
+.sc-listen{display:inline-flex;align-items:center;gap:8px;padding:11px 26px;font-size:16px;border-radius:999px;width:auto}
+.sc-listen svg{width:20px;height:20px}
+.sc-group{font-size:12px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px}
+.sc-lead{font-size:13px;color:var(--ink-soft);font-weight:600;text-align:center;margin:4px 2px 12px}
+.sc-list{padding:6px}
+.sc-row{display:flex;align-items:center;gap:12px;padding:13px 12px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:10px}
+.sc-row:last-child{border-bottom:none}
+.sc-row:active{background:#EEF3FA}
+.sc-word{font-size:17px;font-weight:700;color:var(--ink);flex:0 0 38%}
+.sc-ipa{font-size:16px;color:var(--sky-d);font-weight:600;flex:1}
+.sc-ipa .tgt{color:#C0392B;font-weight:800}   /* target sound: bold + restrained red */
+.sc-spk{color:var(--sky-d);display:inline-flex}.sc-spk svg{width:20px;height:20px}
 
 /* ===== NEXT-PHASE ADDITIONS ===== */
 /* speaker buttons + audio pulse */
-.spk{display:inline-flex;align-items:center;justify-content:center;border:none;background:#E6EDF5;color:var(--sky-d);
-  border-radius:999px;cursor:pointer;font-size:16px;width:34px;height:34px;line-height:1;box-shadow:0 1px 2px rgba(31,58,95,.14);
-  transition:transform .08s, background .12s;user-select:none;vertical-align:middle}
-.spk:active{transform:translateY(1px);box-shadow:none;background:#DDE5EF}
-.spk.big{font-size:20px;width:42px;height:42px}
+.spk{display:inline-flex;align-items:center;justify-content:center;border:none;
+  background:linear-gradient(180deg,#EEF3FA,#E2EAF4);color:var(--sky-d);
+  border-radius:999px;cursor:pointer;font-size:16px;width:34px;height:34px;line-height:1;
+  box-shadow:0 1px 2px rgba(31,58,95,.12),inset 0 1px 0 rgba(255,255,255,.7);
+  transition:transform .14s cubic-bezier(.33,1,.68,1), filter .14s;user-select:none;vertical-align:middle}
+.spk:hover{filter:brightness(1.03)}
+.spk:active{transform:scale(.92)}
+.spk.big{font-size:20px;width:44px;height:44px}
 .opt-spk{margin-left:auto}
-.opt-spk .spk{background:#fff;box-shadow:var(--soft-sm)}
-.ipa-pill .sp{font-size:14px;color:var(--sky-d);opacity:.9;margin-top:2px;display:inline-flex}
+.opt-spk .spk{background:linear-gradient(180deg,#FFFFFF,#F4F7FB);box-shadow:0 1px 2px rgba(27,36,51,.1),inset 0 1px 0 rgba(255,255,255,.8)}
+.ipa-pill .sp{font-size:14px;color:var(--sky-d);opacity:.9;margin-top:2px;display:inline-flex;cursor:pointer;padding:3px;border-radius:8px}
+.ipa-pill .sp:active{background:#E6EDF5}
 .listen-btn .li-ic{display:inline-flex;font-size:20px;vertical-align:middle;margin-right:4px}
 .pulse{animation:pulse .5s ease}
 @keyframes pulse{0%{transform:scale(1)}30%{transform:scale(1.12)}100%{transform:scale(1)}}
 .ipa-pill{position:relative}
 .ipa-pill.pulse{box-shadow:0 0 0 3px #C5D2E2}
 
-/* daily goal card */
-/* COURSE PROGRESS — leading panel (premium, layered) */
-.course-progress{position:relative;overflow:hidden;margin-bottom:12px;padding:18px 18px 16px;border:none;
-  background:linear-gradient(150deg,#24456E 0%,#1F3A5F 55%,#16294A 100%);color:#fff;
-  box-shadow:var(--soft-lg)}
-.course-progress::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;border-radius:50%;
-  background:radial-gradient(circle,rgba(217,181,107,.22),rgba(217,181,107,0) 70%);pointer-events:none}
-.cp-top{display:flex;align-items:center;justify-content:space-between}
-.cp-label{font-family:'Fredoka';font-weight:600;font-size:14px;letter-spacing:.3px;color:#CBD8E8}
-.cp-icon{font-size:22px}
-.cp-pct{font-family:'Fredoka';font-weight:700;font-size:46px;line-height:1.05;margin-top:4px}
-.cp-pct span{font-size:24px;margin-left:2px;color:#D9B56B}
-.cp-sub{font-size:13px;color:#B9C7DA;font-weight:700;margin-top:-2px}
-.cp-bar{height:10px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;margin:12px 0 13px;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+/* COURSE PROGRESS — leading panel (Apple-inspired) */
+.course-progress{position:relative;overflow:hidden;margin-bottom:12px;padding:20px 20px 17px;border:none;
+  border-radius:var(--r-lg);
+  background:linear-gradient(155deg,#274973 0%,#1F3A5F 55%,#172B4C 100%);
+  color:#fff;box-shadow:var(--soft-lg)}
+.course-progress::before{content:"";position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 38%);pointer-events:none}
+.course-progress::after{content:"";position:absolute;right:-40px;top:-40px;width:170px;height:170px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,181,107,.20),rgba(217,181,107,0) 70%);pointer-events:none}
+.cp-top{display:flex;align-items:center;justify-content:space-between;position:relative}
+.cp-label{font-family:'Fredoka';font-weight:500;font-size:13.5px;letter-spacing:.2px;color:#CBD8E8}
+.cp-icon{font-size:20px;opacity:.95}
+.cp-pct{font-family:'Fredoka';font-weight:700;font-size:44px;line-height:1.04;margin-top:5px;letter-spacing:-.5px;position:relative}
+.cp-pct span{font-size:22px;margin-left:2px;color:#E2C27E;font-weight:600}
+.cp-sub{font-size:12.5px;color:#AFC0D6;font-weight:600;margin-top:0}
+.cp-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden;margin:14px 0 14px;
+  box-shadow:inset 0 1px 1.5px rgba(0,0,0,.2);position:relative}
 .cp-bar > i{display:block;height:100%;border-radius:99px;
-  background:linear-gradient(90deg,#D9B56B,#EBCD8C);box-shadow:0 0 8px rgba(217,181,107,.5);
-  transition:width .7s cubic-bezier(.2,.7,.3,1)}
-.cp-stats{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:#C3D0E2;font-weight:700}
-.cp-stats b{color:#fff;font-family:'Fredoka';font-weight:700;font-size:14px;display:block}
+  background:linear-gradient(90deg,#D9B56B,#E9C988);
+  transition:width .7s cubic-bezier(.33,1,.68,1)}
+.cp-stats{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#AFC0D6;font-weight:600;position:relative}
+.cp-stats b{color:#fff;font-family:'Fredoka';font-weight:600;font-size:14px;display:block;margin-bottom:1px}
 .cp-stats span{text-align:center;flex:1}
+.cp-stats span+span{border-left:1px solid rgba(255,255,255,.12)}
 
 /* CONTINUE LEARNING card */
 .continue-card{display:flex;align-items:center;gap:14px;padding:14px 15px;margin-bottom:12px;cursor:pointer;
-  transition:transform .12s, box-shadow .15s}
-.continue-card:hover{box-shadow:var(--soft-lg)}
-.continue-card:active{transform:translateY(1px)}
-.continue-card .cc-badge{width:52px;height:52px;border-radius:14px;flex:none;display:grid;place-items:center;font-size:26px;
-  background:linear-gradient(160deg,#EAF0F7,#DCE5F0);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+  border-radius:var(--r-md);border:1px solid var(--hair);
+  transition:transform .18s cubic-bezier(.33,1,.68,1), box-shadow .18s}
+.continue-card:hover{transform:translateY(-1px);box-shadow:var(--soft-lg)}
+.continue-card:active{transform:translateY(0)}
+.continue-card .cc-badge{width:50px;height:50px;border-radius:14px;flex:none;display:grid;place-items:center;font-size:25px;
+  background:linear-gradient(160deg,#EEF3F9,#E0E8F2);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 1px 2px rgba(27,36,51,.05)}
 .continue-card .cc-meta{flex:1;min-width:0}
-.continue-card .cc-kicker{font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--teal)}
-.continue-card .cc-meta b{display:block;font-family:'Fredoka';font-size:16px;color:var(--ink);line-height:1.15;margin:1px 0}
-.continue-card .cc-meta span{font-size:12.5px;color:var(--ink-soft);font-weight:700}
-.continue-card .cc-go{flex:none;font-family:'Fredoka';font-weight:700;font-size:13px;color:#fff;
-  padding:9px 15px;border-radius:10px;background:linear-gradient(180deg,#2A4A72,var(--teal));
-  box-shadow:0 2px 5px rgba(20,38,64,.28),inset 0 1px 0 rgba(255,255,255,.14)}
+.continue-card .cc-kicker{font-size:10px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--teal);opacity:.85}
+.continue-card .cc-meta b{display:block;font-family:'Fredoka';font-size:16px;color:var(--ink);line-height:1.15;margin:1px 0;letter-spacing:-.2px}
+.continue-card .cc-meta span{font-size:12.5px;color:var(--ink-soft);font-weight:600}
+.continue-card .cc-go{flex:none;font-family:'Fredoka';font-weight:600;font-size:13px;color:#fff;
+  padding:9px 16px;border-radius:10px;background:linear-gradient(180deg,#2A4A72,var(--teal));
+  box-shadow:0 1px 3px rgba(20,38,64,.26),inset 0 1px 0 rgba(255,255,255,.16)}
 
 .goal-card{display:flex;align-items:center;gap:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer}
 .goal-ring{width:52px;height:52px;border-radius:50%;flex:none;display:grid;place-items:center;
@@ -832,7 +894,7 @@ const COURSE = [
     intro:"Put your hand on your throat. <b>Voiced</b> sounds <b>vibrate</b>; <b>voiceless</b> sounds don't. Same mouth shape, different power!",
     groups:[
       {title:"Voiceless (no vibration)", cls:"voiceless", items:[["p","pen"],["t","ten"],["k","key"],["s","sun"],["ʃ","she"],["tʃ","chair"],["f","fan"],["θ","think"],["h","hat"]]},
-      {title:"Voiced (vibration)", cls:"voiced", items:[["b","bed"],["d","dog"],["g","go"],["z","zoo"],["ʒ","vision"],["dʒ","jump"],["v","van"],["ð","this"],["w","we"],["j","yes"],["m","man"],["n","no"],["ŋ","sing"],["l","leg"],["r","red"]]}
+      {title:"Voiced (vibration)", cls:"voiced", items:[["b","boot"],["d","dog"],["g","good"],["z","zoo"],["ʒ","vision"],["dʒ","jump"],["v","van"],["ð","this"],["w","we"],["j","yes"],["m","man"],["n","no"],["ŋ","sing"],["l","leg"],["r","red"]]}
     ],
     note:"Try /s/ then /z/ — same shape, but /z/ buzzes. That buzz is voicing."
   },
@@ -974,7 +1036,7 @@ function freshState(){
     xp:0, combo:0, bestCombo:0,
     streak:1, lastActive:new Date().toDateString(),
     badges:{},                 // id -> true
-    unlocked:["s0"],           // 6. progression
+    unlocked:COURSE.map(s=>s.id),   // adult system: all stages open from the start
     stages:{},                 // id -> {completed, best, correct, total}
     courseDone:false,
     // --- next-phase additions ---
@@ -1035,7 +1097,7 @@ function goalReached(){
 /* =====================================================================
    6. PROGRESSION SYSTEM
    ===================================================================== */
-function isUnlocked(id){ return S.unlocked.includes(id); }
+function isUnlocked(id){ return true; }      // adult system: every stage is always open
 function unlock(id){ if(id && !S.unlocked.includes(id)) S.unlocked.push(id); }
 function nextStageId(id){ const i=COURSE.findIndex(s=>s.id===id); return COURSE[i+1] ? COURSE[i+1].id : null; }
 
@@ -1098,6 +1160,7 @@ const Audio$ = {
   },
   // word: text to speak | src: optional MP3 URL (future teacher audio)
   play(word, src){
+    this._seq = {};                            // invalidate any pending phoneme→word timers
     if(src){                                   // real audio file takes priority
       try{
         const a = new Audio(src);
@@ -1118,13 +1181,218 @@ const Audio$ = {
       u.pitch = 1.0; u.volume = 1.0;
       this.current = u; speechSynthesis.speak(u);
     }catch(e){}
+  },
+  // speak several parts in order with a clear PAUSE between them
+  // (e.g. phoneme sound → beat of silence → the word).
+  speakSeq(parts, gapMs){
+    if(!("speechSynthesis" in window)) return;
+    const list = (parts||[]).filter(Boolean);
+    if(!list.length) return;
+    const gap = gapMs==null ? 450 : gapMs;
+    try{
+      speechSynthesis.cancel();
+      // speak + resume() — Chrome/Android can stay paused after cancel()
+      // and silently drop the utterance; resume() unsticks it.
+      const speakSynthSafe = (u)=>{ speechSynthesis.speak(u); try{ speechSynthesis.resume(); }catch(e){} };
+      const mk = (text, rate)=>{
+        const u = new SpeechSynthesisUtterance(String(text));
+        if(this.voice) u.voice = this.voice;
+        u.lang = (this.voice && this.voice.lang) || "en-GB";
+        u.rate = rate; u.pitch = 1.0; u.volume = 1.0;
+        return u;
+      };
+      const seq = this._seq = {}; // token: a newer tap invalidates pending timers
+      const speakAt = (i)=>{
+        if(this._seq!==seq || i>=list.length) return;
+        // each part may be a plain string or [text, rate]
+        const part = list[i];
+        const text = Array.isArray(part) ? part[0] : part;
+        const rate = Array.isArray(part) ? part[1] : (i===0?0.7:0.78);
+        const u = mk(text, rate);
+        let advanced = false;
+        const next = ()=>{ if(advanced) return; advanced=true;
+          if(i+1<list.length) setTimeout(()=>speakAt(i+1), gap); };
+        u.onend = next;
+        // fallback: if onend never fires (some engines), advance after an estimate
+        setTimeout(next, 1200 + String(text).length*90);
+        speakSynthSafe(u);
+      };
+      // KEY FIX: Chrome drops an utterance queued in the same tick as cancel()
+      // (the phoneme was being swallowed). A short beat lets cancel settle.
+      setTimeout(()=>speakAt(0), 80);
+    }catch(e){}
   }
 };
-// trigger a playback + pulse the clicked element
-function playWord(word, src, el){
+// TEACHING NOTE: anchors are REAL words TTS pronounces correctly, and each
+// anchor matches the example word shown on its tile (what you see = what you
+// hear). Collisions avoided: no two sounds share an anchor word, so a tap is
+// never ambiguous. Long vowels play slower (stretched) so the length contrast
+// vs the short partner is audible.
+const PHONEME_SAY = {
+  // short vowels
+  "ɪ":["ship",1.0],"e":["bed",1.0],"æ":["cat",1.0],"ʌ":["cup",1.0],
+  "ɒ":["hot",1.0],"ʊ":["book",1.0],"ə":["about",1.05],   // "about" gives a real schwa; "a" alone reads as /eɪ/
+  // long vowels — stretched
+  "iː":["sheep",0.75],"ɑː":["car",0.75],"ɔː":["door",0.75],"uː":["food",0.75],"ɜː":["bird",0.75],
+  // diphthongs — gliding
+  "eɪ":["day",0.85],"aɪ":["my",0.85],"ɔɪ":["boy",0.85],"aʊ":["now",0.85],"əʊ":["go",0.85],
+  "ɪə":["here",0.85],"eə":["hair",0.85],"ʊə":["tour",0.85],
+  // voiceless consonants — anchor == tile word
+  "p":["pen",1.05],"t":["ten",1.05],"k":["key",1.05],"f":["fan",1.05],
+  "θ":["think",1.0],"s":["sun",1.05],"ʃ":["she",1.0],"tʃ":["chair",1.0],"h":["hat",1.05],
+  // voiced consonants — anchor == tile word (NB: /d/≠day, /g/≠go to avoid
+  // colliding with the /eɪ/ and /əʊ/ diphthongs)
+  "b":["boot",1.0],"d":["dog",1.0],"g":["good",1.0],"v":["van",1.0],
+  "ð":["this",1.0],"z":["zoo",1.0],"ʒ":["vision",0.95],"dʒ":["jump",1.0],
+  "m":["man",1.0],"n":["no",1.0],"ŋ":["sing",0.95],
+  "l":["leg",1.0],"r":["red",1.0],"w":["we",1.0],"j":["yes",1.0]
+};
+// SOUND LIBRARY — the complete 44-sound inventory for the Sounds tab.
+// Each item: [ipa, example word]. Tap = phoneme → pause → word.
+const SOUND_LIBRARY = [
+  {title:"Short vowels", items:[["ɪ","ship"],["e","bed"],["æ","cat"],["ʌ","cup"],["ɒ","hot"],["ʊ","book"],["ə","about"]]},
+  {title:"Long vowels", items:[["iː","sheep"],["ɑː","car"],["ɔː","door"],["uː","food"],["ɜː","bird"]]},
+  {title:"Diphthongs", items:[["eɪ","day"],["aɪ","my"],["ɔɪ","boy"],["aʊ","now"],["əʊ","go"],["ɪə","here"],["eə","hair"],["ʊə","tour"]]},
+  {title:"Voiceless consonants", cls:"voiceless", items:[["p","pen"],["t","ten"],["k","key"],["f","fan"],["θ","think"],["s","sun"],["ʃ","she"],["tʃ","chair"],["h","hat"]]},
+  {title:"Voiced consonants", cls:"voiced", items:[["b","boot"],["d","dog"],["g","good"],["v","van"],["ð","this"],["z","zoo"],["ʒ","vision"],["dʒ","jump"],["m","man"],["n","no"],["ŋ","sing"],["l","leg"],["r","red"],["w","we"],["j","yes"]]}
+];
+// Pure voiceless fricatives can't come from TTS (any spelling adds a vowel or
+// letter names). Synthesize them as filtered noise — physically what /s/ is.
+const NOISE_SAY = {
+  "s": {type:"highpass", freq:5200, dur:0.5, vol:0.5}    // bright hiss, no voicing
+};
+function playNoise(spec){
+  const ctx = ac(); if(!ctx) return spec.dur*1000;
+  try{
+    const n = Math.floor(ctx.sampleRate * spec.dur);
+    const buf = ctx.createBuffer(1, n, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for(let i=0;i<n;i++) d[i] = Math.random()*2-1;       // white noise
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const filt = ctx.createBiquadFilter();
+    filt.type = spec.type; filt.frequency.value = spec.freq;
+    const g = ctx.createGain();
+    const t = ctx.currentTime;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(spec.vol, t+0.04);     // soft attack
+    g.gain.setValueAtTime(spec.vol, t+spec.dur-0.12);
+    g.gain.linearRampToValueAtTime(0.0001, t+spec.dur);   // soft release
+    src.connect(filt); filt.connect(g); g.connect(ctx.destination);
+    src.start(t); src.stop(t+spec.dur);
+  }catch(e){}
+  return spec.dur*1000;
+}
+// trigger a playback + pulse the clicked element.
+// ipa (optional): speak the phoneme sound first, then the word.
+function playWord(word, src, el, ipa){
   sfx("tap");
-  Audio$.play(word, src);
+  if(ipa && PHONEME_SAY[ipa] && !src){
+    const anchor = PHONEME_SAY[ipa];          // [text, rate]
+    const sameWord = anchor[0].toLowerCase() === String(word||"").toLowerCase();
+    // anchor word demonstrates the target sound; if the tile's example word is
+    // different, play it second (anchor → pause → example). If identical, the
+    // single clear anchor play IS the demonstration (no robotic double-read).
+    if(sameWord || !word){
+      Audio$.speakSeq([anchor]);
+    } else {
+      Audio$.speakSeq([anchor, word]);
+    }
+  } else {
+    Audio$.play(word, src);
+  }
   if(el){ el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse"); }
+}
+
+// ===== PURE PHONEME PLAYBACK (Sound Reference Card top button) =====
+// Goal: play ONLY the target sound itself — not a letter name, not a word.
+// Browser TTS cannot utter a bare phoneme, so:
+//   1. If a real human recording exists (PHONEME_AUDIO[ipa]), play that.
+//   2. Otherwise fall back to the closest isolated TTS approximation, spoken
+//      slowly — never a full word. (Replace with recordings for true accuracy.)
+// PHONEME_AUDIO is intentionally empty now: drop in MP3 URLs later, e.g.
+//   "ɪ":"sounds/ipa-i.mp3"  → the top button will play the real /ɪ/ instantly.
+// ===== HUMAN-RECORDED IPA AUDIO (always higher priority than TTS) =====
+// Canonical filename for every sound: "IPA Chart - /xxx/.mp3", keyed by the
+// FINAL IPA symbol (never ee/er/ay etc). All 44 slots are pre-reserved below.
+// To activate: drop the .mp3 into AUDIO_DIR and the top button plays the real
+// recording automatically; until then it falls back to the TTS cue.
+let AUDIO_DIR = "";   // set to "audio/" (or a URL prefix) once your mp3s exist
+const PHONEME_AUDIO_FILES = {
+  // short vowels
+  "ɪ":"IPA Chart - /ɪ/.mp3",  "e":"IPA Chart - /e/.mp3",  "æ":"IPA Chart - /æ/.mp3",
+  "ʌ":"IPA Chart - /ʌ/.mp3",  "ɒ":"IPA Chart - /ɒ/.mp3",  "ʊ":"IPA Chart - /ʊ/.mp3",  "ə":"IPA Chart - /ə/.mp3",
+  // long vowels
+  "iː":"IPA Chart - /iː/.mp3", "ɑː":"IPA Chart - /ɑː/.mp3", "ɔː":"IPA Chart - /ɔː/.mp3",
+  "uː":"IPA Chart - /uː/.mp3", "ɜː":"IPA Chart - /ɜː/.mp3",
+  // diphthongs
+  "eɪ":"IPA Chart - /eɪ/.mp3", "aɪ":"IPA Chart - /aɪ/.mp3", "ɔɪ":"IPA Chart - /ɔɪ/.mp3",
+  "aʊ":"IPA Chart - /aʊ/.mp3", "əʊ":"IPA Chart - /əʊ/.mp3", "ɪə":"IPA Chart - /ɪə/.mp3",
+  "eə":"IPA Chart - /eə/.mp3", "ʊə":"IPA Chart - /ʊə/.mp3",
+  // voiceless consonants
+  "p":"IPA Chart - /p/.mp3", "t":"IPA Chart - /t/.mp3", "k":"IPA Chart - /k/.mp3",
+  "f":"IPA Chart - /f/.mp3", "θ":"IPA Chart - /θ/.mp3", "s":"IPA Chart - /s/.mp3",
+  "ʃ":"IPA Chart - /ʃ/.mp3", "tʃ":"IPA Chart - /tʃ/.mp3", "h":"IPA Chart - /h/.mp3",
+  // voiced consonants
+  "b":"IPA Chart - /b/.mp3", "d":"IPA Chart - /d/.mp3", "g":"IPA Chart - /g/.mp3",
+  "v":"IPA Chart - /v/.mp3", "ð":"IPA Chart - /ð/.mp3", "z":"IPA Chart - /z/.mp3",
+  "ʒ":"IPA Chart - /ʒ/.mp3", "dʒ":"IPA Chart - /dʒ/.mp3", "m":"IPA Chart - /m/.mp3",
+  "n":"IPA Chart - /n/.mp3", "ŋ":"IPA Chart - /ŋ/.mp3", "l":"IPA Chart - /l/.mp3",
+  "r":"IPA Chart - /r/.mp3", "w":"IPA Chart - /w/.mp3", "j":"IPA Chart - /j/.mp3"
+};
+// Set a sound's value to true (or rely on AUDIO_AVAILABLE) once its mp3 exists.
+// Empty = no recording yet → TTS fallback is used. NO recordings are bundled now.
+const PHONEME_AUDIO = {};
+// Resolve the recording URL for a sound, or "" if none is active yet.
+function phonemeAudioSrc(ipa){
+  // explicit override wins (e.g. PHONEME_AUDIO["ɪ"]="custom.mp3")
+  if(PHONEME_AUDIO[ipa]) return PHONEME_AUDIO[ipa];
+  // otherwise use the canonical file IF a directory has been configured
+  if(AUDIO_DIR && PHONEME_AUDIO_FILES[ipa]) return AUDIO_DIR + PHONEME_AUDIO_FILES[ipa];
+  return "";
+}
+// Isolated approximations per teaching spec — a near-sound CUE, never a word
+// or letter name. Browser TTS cannot make a true isolated phoneme, so these are
+// learner-friendly hints; human recordings (above) always take priority.
+const PHONEME_ISO = {
+  // ----- short vowels -----
+  "ɪ":["ee",1.15],     // short "ee"
+  "ə":["err",1.15],    // clearer short "er"
+  "æ":["aa",1.1],      // "at" without the t
+  "ʌ":["ah",1.1],      // short "ah"
+  "ɒ":["o",1.1],       // short "o"
+  "e":["eh",1.1],
+  "ʊ":["wu",1.1],      // closer to "wu" short
+  // ----- long vowels -----
+  "ɜː":["err",0.6],    // clearer long "er"
+  "iː":["ee",0.6],
+  "ɑː":["ah",0.6],     // long "ah"
+  "ɔː":["aw",0.6],"uː":["oo",0.6],
+  // ----- diphthongs -----
+  "eɪ":["ay",0.8],     // "ay" (not "ei")
+  "ɪə":["eer",0.8],    // "eer"
+  "eə":["air",0.8],    // "air"
+  "ʊə":["wu er",0.8],  // "wu-er"
+  "aɪ":["eye",0.8],"ɔɪ":["oy",0.8],"aʊ":["ow",0.8],"əʊ":["oh",0.8],
+  // ----- voiceless consonants (light "er" support so TTS says the SOUND,
+  //        not the letter name; still not a full word) -----
+  "p":["per",1.0],"t":["ter",1.0],"k":["ker",1.0],"f":["fer",1.0],
+  "θ":["ther",1.0],"s":["ser",1.0],"ʃ":["sher",1.0],"tʃ":["cher",1.0],"h":["her",1.0],
+  // ----- voiced consonants (with -er support) -----
+  "b":["bur",1.0],"d":["dur",1.0],"g":["ger",1.0],"v":["vur",1.0],
+  "ð":["dher",1.0],"ʒ":["zhur",1.0],"dʒ":["jur",1.0],
+  "m":["mur",1.0],"n":["nur",1.0],"ŋ":["erng",1.0],
+  "l":["lur",1.0],"r":["rur",1.0],"w":["wer",1.0],"j":["yer",1.0],
+  "z":["zur",1.0]
+};
+// PRIORITY RULE: human-recorded IPA audio ALWAYS wins over TTS. If browser TTS
+// cannot produce a proper isolated IPA sound, the PHONEME_AUDIO hook lets us
+// drop in human recordings later without changing the system.
+function playPhoneme(ipa){
+  sfx("tap");
+  const src = phonemeAudioSrc(ipa);
+  if(src){ Audio$.play(null, src); return; }     // human recording ALWAYS wins
+  const iso = PHONEME_ISO[ipa];
+  if(iso){ Audio$.speakSeq([iso]); }             // isolated cue only — never a word/letter
 }
 // clean SVG speaker glyph (replaces plain emoji for a more tappable look)
 const SPK_SVG = '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polygon points="4 9 4 15 8 15 13 19 13 5 8 9" fill="currentColor" stroke="none"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>';
@@ -1177,6 +1445,8 @@ function render(){
   renderHUD(); renderNav();
   document.getElementById("feedback").className=""; document.getElementById("feedback").innerHTML="";
   if(view.name==="map") return renderMap();
+  if(view.name==="sounds") return renderSounds();
+  if(view.name==="soundcard") return renderSoundCard(view.ipa);
   if(view.name==="profile") return renderProfile();
   if(view.name==="stage") return renderStageFlow();
   if(view.name==="done") return renderCourseComplete();
@@ -1198,31 +1468,126 @@ function renderHUD(){
     <div class="xpbar"><i style="width:${(li.pct*100).toFixed(1)}%"></i></div>
     <div class="xptxt">${li.into} / ${li.span} XP to Lvl ${li.lvl+1} · 🎯 ${S.todayXP}/${S.dailyGoal} today (${goalPct}%)</div>`;
 }
+/* ---------- SOUNDS LIBRARY (all 44 phonemes; tap a card → reference card) ---------- */
+function renderSounds(){
+  const groups = SOUND_LIBRARY.map(g=>`
+    <div class="card block">
+      <h3>${g.title}</h3>
+      ${soundTiles(g.items, g.cls||"")}
+    </div>`).join("");
+  $screen().innerHTML = `
+    <div class="hero">
+      <span class="logo">✦ TOUCH ENGLISH</span>
+      <h1>Sound Library</h1>
+      <p>All 44 sounds. Tap a card to open it — hear the sound, then see it in common words.</p>
+    </div>
+    <div class="pad" style="padding-top:0">${groups}</div>
+    <div class="fineprint">Tip: say each one out loud right after you hear it.</div>`;
+}
+// Sounds-page tiles: card body → reference card; speaker glyph → quick play.
+function soundTiles(items, cls){
+  return `<div class="ipa-grid">${items.map(it=>{
+    const word = it[1]||"";
+    return `
+    <div class="ipa-pill ${cls||''}" data-action="openSoundCard" data-ipa="${it[0]}" aria-label="Open ${it[0]}">
+      <b class="ipa">${it[0]}</b>${word?`<span class="w">${word}</span>`:""}
+      <span class="sp" data-action="playword" data-word="${word}" data-ipa="${it[0]}" aria-label="Play ${word}">${SPK_SVG}</span>
+    </div>`;}).join("")}</div>`;
+}
+
+/* ---------- SOUND REFERENCE CARD ----------
+   Teaching principle: the learner ALWAYS hears the target sound first, then
+   sees how that sound appears in common English words. This is a reference
+   card, not a quiz — no auto-advance, no click limit, replay freely.        */
+// IPA units that must be treated as ONE symbol so a target like /ɪ/ is not
+// matched inside a diphthong like /eɪ/.
+const IPA_UNITS = ["eɪ","aɪ","ɔɪ","aʊ","əʊ","ɪə","eə","ʊə","iː","ɑː","ɔː","uː","ɜː","tʃ","dʒ"];
+// normalise look-alike glyphs (script-ɡ U+0261 vs ascii g) so matching works
+function ipaNorm(ch){ return ch==="ɡ" ? "g" : ch; }
+// Wrap the FIRST occurrence of the target sound inside a transcription with a
+// highlight span, so learners see exactly where the sound appears in the word.
+function ipaHighlight(tr, target){
+  if(!tr || !target) return tr||"";
+  const hasSlash = tr.startsWith("/");
+  const body = tr.replace(/^\/|\/$/g,"");
+  const tgt = Array.from(target).map(ipaNorm).join("");
+  // tokenise into IPA units (2-char units first), keeping stress/length marks
+  const toks=[];
+  for(let i=0;i<body.length;){
+    const two=body.substr(i,2);
+    if(IPA_UNITS.includes(two)){ toks.push(two); i+=2; }
+    else { toks.push(body[i]); i+=1; }
+  }
+  let done=false;
+  const out=toks.map(t=>{
+    const tn = Array.from(t).map(ipaNorm).join("");
+    if(!done && tn===tgt){ done=true; return `<span class="tgt">${t}</span>`; }
+    return t;
+  }).join("");
+  return (hasSlash?"/":"")+out+(hasSlash?"/":"");
+}
+
+function renderSoundCard(ipa){
+  const group = SOUND_LIBRARY.find(g=>g.items.some(it=>it[0]===ipa));
+  const cls = group ? (group.cls||"") : "";
+  const groupTitle = group ? group.title : "";
+  const words = (SOUND_WORDS[ipa]||[]);
+  const anchorWord = (PHONEME_SAY[ipa]||[])[0] || (words[0]||"");
+  const rows = words.map(w=>{
+    const tr = WORD_IPA[w] || "";
+    return `
+    <div class="sc-row" data-action="playword" data-word="${w}" aria-label="Play ${w}">
+      <span class="sc-word">${w}</span>
+      <span class="sc-ipa">${ipaHighlight(tr, ipa)}</span>
+      <span class="sc-spk">${SPK_SVG}</span>
+    </div>`;
+  }).join("");
+  $screen().innerHTML = `
+    <div class="topbar"><button class="iconbtn" data-action="goSounds">✕</button>
+      <span class="topbar-title">Sound Reference</span><span style="width:38px"></span></div>
+    <div class="pad">
+      <div class="sc-hero ${cls}">
+        <div class="sc-ipa-big">/${ipa}/</div>
+        <button class="btn sc-listen" data-action="playPhoneme" data-ipa="${ipa}">
+          ${SPK_SVG}<span>Listen</span>
+        </button>
+        ${groupTitle?`<div class="sc-group">${groupTitle}</div>`:""}
+      </div>
+      <div class="sc-lead">This sound appears in these common words. Tap any word to hear it.</div>
+      <div class="card block sc-list">${rows}</div>
+      <div class="fineprint">Hear the sound first, then say each word out loud. Replay as many times as you like.</div>
+    </div>`;
+}
+
 function renderNav(){
   const learnOn = view.name==="map"||view.name==="stage"||view.name==="done";
   const mapIc = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21"/><line x1="8" y1="3" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="21"/></svg>';
+  const soundIc = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="4 9 4 15 8 15 13 19 13 5 8 9" fill="currentColor" stroke="none"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>';
   const userIc = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>';
   document.getElementById("nav").innerHTML = `
     <button class="${learnOn?'on':''}" data-action="goMap"><span class="i">${mapIc}</span><span class="lbl">Learn</span></button>
+    <button class="${view.name==='sounds'?'on':''}" data-action="goSounds"><span class="i">${soundIc}</span><span class="lbl">Sounds</span></button>
     <button class="${view.name==='profile'?'on':''}" data-action="goProfile"><span class="i">${userIc}</span><span class="lbl">Profile</span></button>`;
 }
 
 /* ---------- 10a. STAGE MAP ---------- */
+
+
 function renderMap(){
   let nodes="";
+  const firstIncomplete = COURSE.find(s=>!S.stages[s.id]?.completed);
   COURSE.forEach((s,i)=>{
     const st = S.stages[s.id]||{};
-    const open = isUnlocked(s.id);
     const done = st.completed;
-    const cls = done?"done":(open?"open":"locked");
+    const cls = done?"done":"open";          // adult system: no locked state
     const side = i%2===0 ? "c" : (i%4===1?"l":"r");
     const badgeDot = done && BADGES[s.reward.badge] ? `<span class="badge-dot">${badgeMedal(BADGES[s.reward.badge]).replace('class="medal ','class="medal sm ')}</span>` : "";
-    const start = open && !done ? `<span class="start-flag">START</span>` : "";
+    const start = (firstIncomplete && firstIncomplete.id===s.id) ? `<span class="start-flag">START</span>` : "";
     const checkSVG = '<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 13 10 18 19 6"/></svg>';
-    const face = done ? checkSVG : (open ? s.icon : "🔒");
+    const face = done ? checkSVG : s.icon;
     nodes += (i>0?`<div class="connector"></div>`:"") + `
       <div class="node-wrap" data-side="${i===0?'c':(i%2?'l':'r')}">
-        <div class="node ${cls}" data-action="${open?'openStage':''}" data-id="${s.id}">
+        <div class="node ${cls}" data-action="openStage" data-id="${s.id}">
           ${start}${badgeDot}
           <div class="disc">${face}</div>
           <div class="nm">${s.title}</div>
@@ -1351,9 +1716,73 @@ function sessionExercises(s){ return (session && session.queue) ? session.queue 
    Recycles previously-wrong questions + a few items targeting weak sounds.
    Reuses the exact stage-quiz engine via a small synthetic stage object.
    ===================================================================== */
+// =====================================================================
+//  SOUND PRACTICE WORD BANK  (teacher-curated)
+//  For each IPA sound: 10 high-frequency, mostly single-syllable words that
+//  clearly contain the target sound. Chosen for Common + Simple + Easy to
+//  remember (cat/dog/pen), NOT rare/academic. Each word hand-checked so the
+//  target sound is unambiguous.
+// =====================================================================
+const SOUND_WORDS = {
+  // ---- short vowels ----
+  "ɪ":["sit","pig","big","pin","kid","win","lip","hit","zip","bin"],
+  "e":["bed","pen","red","ten","net","yes","wet","hen","leg","egg"],
+  "æ":["cat","bag","map","hat","bad","fan","man","jam","cab","sad"],
+  "ʌ":["cup","bus","sun","cut","mud","nut","run","gun","duck","luck"],
+  "ɒ":["hot","dog","top","job","pot","mop","pop","rock","lock","sock"],
+  "ʊ":["book","foot","good","look","cook","wood","put","pull","bull","hook"],
+  "ə":["about","sofa","banana","again","comma","camera","panda","zebra","pizza","data"],
+  // ---- long vowels ----
+  "iː":["sheep","tree","key","sea","bee","green","cheese","read","meet","feet"],
+  "ɑː":["car","star","park","arm","card","dark","far","hard","jar","bar"],
+  "ɔː":["door","ball","wall","call","four","saw","law","draw","fork","corn"],
+  "uː":["food","blue","moon","spoon","zoo","shoe","room","cool","pool","glue"],
+  "ɜː":["bird","girl","word","work","first","shirt","turn","burn","nurse","third"],
+  // ---- diphthongs ----
+  "eɪ":["day","cake","name","rain","play","face","game","late","train","gate"],
+  "aɪ":["my","time","five","ice","kite","ride","light","night","bike","line"],
+  "ɔɪ":["boy","toy","coin","oil","join","noise","voice","point","joy","soil"],
+  "aʊ":["now","cow","house","mouth","down","town","brown","cloud","sound","mouse"],
+  "əʊ":["go","home","nose","boat","road","snow","phone","coat","bone","note"],
+  "ɪə":["here","ear","beer","year","dear","near","clear","fear","deer","cheer"],
+  "eə":["hair","air","chair","bear","pear","care","share","wear","square","stare"],
+  "ʊə":["tour","pure","cure","sure","poor","tourist","mature","secure","detour","Europe"],
+  // ---- voiceless consonants ----
+  "p":["pen","pig","cup","map","top","pet","pan","lip","cap","tap"],
+  "t":["ten","cat","top","toy","hat","tea","net","bat","sit","tie"],
+  "k":["key","cat","cup","cake","book","kid","car","milk","duck","kick"],
+  "f":["fan","fish","four","leaf","fun","fly","foot","knife","life","off"],
+  "θ":["think","thin","bath","math","mouth","tooth","path","thick","cloth","fourth"],
+  "s":["sun","sit","bus","yes","see","sea","sad","kiss","sock","sing"],
+  "ʃ":["she","shop","fish","ship","shoe","wash","push","cash","dish","brush"],
+  "tʃ":["chair","cheese","catch","watch","lunch","chip","much","rich","teach","match"],
+  "h":["hat","hot","home","hand","hill","hen","house","help","hop","hug"],
+  // ---- voiced consonants ----
+  "b":["boot","bed","big","bus","bag","ball","book","bird","boy","cab"],
+  "d":["dog","day","desk","door","duck","red","bad","mud","ride","bed"],
+  "g":["good","go","big","dog","bag","game","girl","green","egg","gun"],
+  "v":["van","very","love","five","give","live","seven","river","voice","save"],
+  "ð":["this","that","they","them","then","the","mother","father","brother","weather"],
+  "z":["zoo","zip","buzz","nose","rose","jazz","size","prize","zebra","lazy"],
+  "ʒ":["vision","measure","treasure","usual","casual","leisure","pleasure","beige","garage","decision"],
+  "dʒ":["jump","jam","job","page","cage","bridge","juice","jacket","fridge","large"],
+  "m":["man","map","milk","mum","moon","mouse","jam","time","name","game"],
+  "n":["no","net","nose","sun","ten","run","moon","rain","name","nine"],
+  "ŋ":["sing","ring","king","long","song","wing","bring","strong","hang","young"],
+  "l":["leg","lion","milk","ball","bell","love","light","lamp","blue","cool"],
+  "r":["red","run","rain","road","rock","ring","river","green","tree","grass"],
+  "w":["we","win","water","wall","week","wind","west","wood","wet","wing"],
+  "j":["yes","you","year","yellow","young","yard","yawn","yoga","beyond","yet"]
+};
+
+
+// Verified British-RP IPA for every curated SOUND_WORDS entry (317 words).
+// Hand-checked by a pronunciation teacher — shown on the Sound Reference Card.
+const WORD_IPA = {"about":"/əˈbaʊt/", "again":"/əˈɡen/", "air":"/eə/", "arm":"/ɑːm/", "bad":"/bæd/", "bag":"/bæɡ/", "ball":"/bɔːl/", "banana":"/bəˈnɑːnə/", "bar":"/bɑː/", "bat":"/bæt/", "bath":"/bɑːθ/", "bear":"/beə/", "bed":"/bed/", "bee":"/biː/", "beer":"/bɪə/", "beige":"/beɪʒ/", "bell":"/bel/", "beyond":"/bɪˈjɒnd/", "big":"/bɪɡ/", "bike":"/baɪk/", "bird":"/bɜːd/", "blue":"/bluː/", "boat":"/bəʊt/", "bone":"/bəʊn/", "book":"/bʊk/", "boot":"/buːt/", "box":"/bɒks/", "boy":"/bɔɪ/", "bridge":"/brɪdʒ/", "bring":"/brɪŋ/", "brother":"/ˈbrʌðə/", "brown":"/braʊn/", "brush":"/brʌʃ/", "bull":"/bʊl/", "burn":"/bɜːn/", "bus":"/bʌs/", "buzz":"/bʌz/", "cab":"/kæb/", "cage":"/keɪdʒ/", "cake":"/keɪk/", "call":"/kɔːl/", "camera":"/ˈkæmərə/", "cap":"/kæp/", "car":"/kɑː/", "card":"/kɑːd/", "care":"/keə/", "cash":"/kæʃ/", "casual":"/ˈkæʒuəl/", "cat":"/kæt/", "catch":"/kætʃ/", "chair":"/tʃeə/", "cheer":"/tʃɪə/", "cheese":"/tʃiːz/", "chip":"/tʃɪp/", "clear":"/klɪə/", "clock":"/klɒk/", "cloth":"/klɒθ/", "cloud":"/klaʊd/", "coat":"/kəʊt/", "coin":"/kɔɪn/", "comma":"/ˈkɒmə/", "cook":"/kʊk/", "cool":"/kuːl/", "corn":"/kɔːn/", "cow":"/kaʊ/", "cup":"/kʌp/", "cure":"/kjʊə/", "cut":"/kʌt/", "dark":"/dɑːk/", "data":"/ˈdeɪtə/", "day":"/deɪ/", "dear":"/dɪə/", "decision":"/dɪˈsɪʒn/", "deer":"/dɪə/", "desk":"/desk/", "detour":"/ˈdiːtʊə/","Europe":"/ˈjʊərəp/","bin":"/bɪn/","six":"/sɪks/","mop":"/mɒp/","pop":"/pɒp/","pot":"/pɒt/","put":"/pʊt/", "dish":"/dɪʃ/", "dog":"/dɒɡ/", "door":"/dɔː/", "down":"/daʊn/", "draw":"/drɔː/", "duck":"/dʌk/", "ear":"/ɪə/", "egg":"/eɡ/", "face":"/feɪs/", "fan":"/fæn/", "far":"/fɑː/", "father":"/ˈfɑːðə/", "fear":"/fɪə/", "feet":"/fiːt/", "first":"/fɜːst/", "fish":"/fɪʃ/", "five":"/faɪv/", "fly":"/flaɪ/", "food":"/fuːd/", "foot":"/fʊt/", "fork":"/fɔːk/", "four":"/fɔː/", "fourth":"/fɔːθ/", "fridge":"/frɪdʒ/", "fun":"/fʌn/", "game":"/ɡeɪm/", "garage":"/ˈɡærɑːʒ/", "gate":"/ɡeɪt/", "girl":"/ɡɜːl/", "give":"/ɡɪv/", "glue":"/ɡluː/", "go":"/ɡəʊ/", "good":"/ɡʊd/", "grass":"/ɡrɑːs/", "green":"/ɡriːn/", "gun":"/ɡʌn/", "hair":"/heə/", "hand":"/hænd/", "hang":"/hæŋ/", "hard":"/hɑːd/", "hat":"/hæt/", "help":"/help/", "hen":"/hen/", "here":"/hɪə/", "hill":"/hɪl/", "hit":"/hɪt/", "home":"/həʊm/", "hook":"/hʊk/", "hop":"/hɒp/", "hot":"/hɒt/", "house":"/haʊs/", "hug":"/hʌɡ/", "ice":"/aɪs/", "jacket":"/ˈdʒækɪt/", "jam":"/dʒæm/", "jar":"/dʒɑː/", "jazz":"/dʒæz/", "job":"/dʒɒb/", "join":"/dʒɔɪn/", "joy":"/dʒɔɪ/", "juice":"/dʒuːs/", "jump":"/dʒʌmp/", "key":"/kiː/", "kick":"/kɪk/", "kid":"/kɪd/", "king":"/kɪŋ/", "kiss":"/kɪs/", "kite":"/kaɪt/", "knife":"/naɪf/", "lamp":"/læmp/", "large":"/lɑːdʒ/", "late":"/leɪt/", "law":"/lɔː/", "lazy":"/ˈleɪzi/", "leaf":"/liːf/", "leg":"/leɡ/", "leisure":"/ˈleʒə/", "life":"/laɪf/", "light":"/laɪt/", "line":"/laɪn/", "lion":"/ˈlaɪən/", "lip":"/lɪp/", "live":"/lɪv/", "lock":"/lɒk/", "long":"/lɒŋ/", "look":"/lʊk/", "love":"/lʌv/", "luck":"/lʌk/", "lunch":"/lʌntʃ/", "man":"/mæn/", "map":"/mæp/", "match":"/mætʃ/", "math":"/mæθ/", "mature":"/məˈtʃʊə/", "measure":"/ˈmeʒə/", "meet":"/miːt/", "milk":"/mɪlk/", "moon":"/muːn/", "mother":"/ˈmʌðə/", "mouse":"/maʊs/", "mouth":"/maʊθ/", "much":"/mʌtʃ/", "mud":"/mʌd/", "mum":"/mʌm/", "my":"/maɪ/", "name":"/neɪm/", "near":"/nɪə/", "net":"/net/", "night":"/naɪt/", "nine":"/naɪn/", "no":"/nəʊ/", "noise":"/nɔɪz/", "nose":"/nəʊz/", "note":"/nəʊt/", "now":"/naʊ/", "nurse":"/nɜːs/", "nut":"/nʌt/", "off":"/ɒf/", "oil":"/ɔɪl/", "page":"/peɪdʒ/", "pan":"/pæn/", "panda":"/ˈpændə/", "park":"/pɑːk/", "path":"/pɑːθ/", "pear":"/peə/", "pen":"/pen/", "pet":"/pet/", "phone":"/fəʊn/", "pig":"/pɪɡ/", "pin":"/pɪn/", "pizza":"/ˈpiːtsə/", "play":"/pleɪ/", "pleasure":"/ˈpleʒə/", "point":"/pɔɪnt/", "pool":"/puːl/", "poor":"/pʊə/", "prize":"/praɪz/", "pull":"/pʊl/", "pure":"/pjʊə/", "push":"/pʊʃ/", "rain":"/reɪn/", "read":"/riːd/", "red":"/red/", "rich":"/rɪtʃ/", "ride":"/raɪd/", "ring":"/rɪŋ/", "river":"/ˈrɪvə/", "road":"/rəʊd/", "rock":"/rɒk/", "room":"/ruːm/", "rose":"/rəʊz/", "run":"/rʌn/", "sad":"/sæd/", "save":"/seɪv/", "saw":"/sɔː/", "sea":"/siː/", "secure":"/sɪˈkjʊə/", "see":"/siː/", "seven":"/ˈsevn/", "share":"/ʃeə/", "she":"/ʃiː/", "sheep":"/ʃiːp/", "ship":"/ʃɪp/", "shirt":"/ʃɜːt/", "shoe":"/ʃuː/", "shop":"/ʃɒp/", "sing":"/sɪŋ/", "sit":"/sɪt/", "size":"/saɪz/", "snow":"/snəʊ/", "sock":"/sɒk/", "sofa":"/ˈsəʊfə/", "soil":"/sɔɪl/", "song":"/sɒŋ/", "sound":"/saʊnd/", "spoon":"/spuːn/", "square":"/skweə/", "star":"/stɑː/", "stare":"/steə/", "strong":"/strɒŋ/", "sun":"/sʌn/", "sure":"/ʃʊə/", "tap":"/tæp/", "tea":"/tiː/", "teach":"/tiːtʃ/", "ten":"/ten/", "that":"/ðæt/", "the":"/ðə/", "them":"/ðem/", "then":"/ðen/", "they":"/ðeɪ/", "thick":"/θɪk/", "thin":"/θɪn/", "think":"/θɪŋk/", "third":"/θɜːd/", "this":"/ðɪs/", "tie":"/taɪ/", "time":"/taɪm/", "tooth":"/tuːθ/", "top":"/tɒp/", "tour":"/tʊə/", "tourist":"/ˈtʊərɪst/", "town":"/taʊn/", "toy":"/tɔɪ/", "train":"/treɪn/", "treasure":"/ˈtreʒə/", "tree":"/triː/", "turn":"/tɜːn/", "usual":"/ˈjuːʒuəl/", "van":"/væn/", "very":"/ˈveri/", "vision":"/ˈvɪʒn/", "voice":"/vɔɪs/", "wall":"/wɔːl/", "wash":"/wɒʃ/", "watch":"/wɒtʃ/", "water":"/ˈwɔːtə/", "we":"/wiː/", "wear":"/weə/", "weather":"/ˈweðə/", "week":"/wiːk/", "west":"/west/", "wet":"/wet/", "win":"/wɪn/", "wind":"/wɪnd/", "wing":"/wɪŋ/", "wood":"/wʊd/", "word":"/wɜːd/", "work":"/wɜːk/", "yard":"/jɑːd/", "yawn":"/jɔːn/", "year":"/jɪə/", "yellow":"/ˈjeləʊ/", "yes":"/jes/", "yet":"/jet/", "yoga":"/ˈjəʊɡə/", "you":"/juː/", "young":"/jʌŋ/", "zebra":"/ˈzebrə/", "zip":"/zɪp/", "zoo":"/zuː/"};
+
 const REVIEW_STAGE = { id:"review", title:"Today's Review", short:"Review", icon:"🔁", color:"coral",
   exercises:[], reward:{ xp:0, title:"Review complete!", line:"" } };
-function findStage(id){ return id==="review" ? REVIEW_STAGE : COURSE.find(x=>x.id===id); }
+function findStage(id){ return id==="review" ? REVIEW_STAGE : id==="soundpx" ? SOUND_STAGE : COURSE.find(x=>x.id===id); }
 // gather a few extra questions that drill the learner's weakest sounds.
 // Deterministic (no randomness) so the count and the actual session agree.
 function weakSoundQuestions(){
@@ -1394,6 +1823,129 @@ function startReview(){
               perfect:true, comboStart:S.combo, queue, isReview:true };
   S.combo=0; renderHUD(); go({name:"stage"});
 }
+
+// ===== PER-SOUND PRACTICE (Sounds page → tap a sound → 10 targeted questions) =====
+// Reuses the engine via a temporary stage (like REVIEW_STAGE), marked isReview
+// so it gives a light wrap-up and does NOT touch course progression.
+const SOUND_STAGE = { id:"soundpx", title:"Sound Practice", short:"Practice", icon:"🔊", color:"teal",
+  exercises:[], reward:{ xp:0, title:"Practice complete!", line:"" } };
+function soundLabel(ipa){
+  const ex0 = (SOUND_WORDS[ipa]||[])[0] || "";
+  return `/${ipa}/${ex0?` (${ex0})`:""}`;
+}
+// words that do NOT contain the target sound, avoiding its confusable partner
+// ===== SOUND DISTANCE TIERS (beginner→advanced difficulty curve) =====
+// Each sound belongs to a phonetic family. Distractors are graded by how FAR
+// they sit from the target so beginners build a sound boundary before facing
+// minimal pairs (full/fool, ship/sheep).
+const SOUND_FAMILY = {
+  short:["ɪ","e","æ","ʌ","ɒ","ʊ","ə"],
+  long:["iː","ɑː","ɔː","uː","ɜː"],
+  diph:["eɪ","aɪ","ɔɪ","aʊ","əʊ","ɪə","eə","ʊə"],
+  vless:["p","t","k","f","θ","s","ʃ","tʃ","h"],
+  vced:["b","d","g","v","ð","z","ʒ","dʒ","m","n","ŋ","l","r","w","j"]
+};
+function familyOf(ipa){
+  for(const [fam,arr] of Object.entries(SOUND_FAMILY)) if(arr.includes(ipa)) return fam;
+  return "other";
+}
+function nearPartners(ipa){ return [LENGTH_PAIRS[ipa], VOICE_PAIRS[ipa]].filter(Boolean); }
+// pick `n` distractor WORDS at a difficulty tier:
+//  "far"  → opposite macro-category (vowel↔consonant): easy
+//  "mid"  → related family but NOT the minimal-pair partner: medium
+//  "near" → the minimal-pair partner (length/voice): advanced
+function tierWords(ipa, n, tier){
+  const fam = familyOf(ipa);
+  const near = new Set(nearPartners(ipa));
+  const own = new Set(SOUND_WORDS[ipa]||[]);
+  let allow;
+  if(tier==="near"){
+    allow = s => near.has(s);
+  } else if(tier==="mid"){
+    const sameBucket = ["short","long"].includes(fam) ? ["short","long"] : [fam];
+    allow = s => s!==ipa && !near.has(s) && sameBucket.includes(familyOf(s));
+  } else {
+    const consonantFams=["vless","vced"], vowelFams=["short","long","diph"];
+    const isVowel = vowelFams.includes(fam);
+    if(isVowel){
+      // far = a clearly different vowel quality: diphthongs read as very distinct
+      // from plain short/long vowels, so prefer the non-adjacent vowel families.
+      const farVowel = fam==="diph" ? ["short","long"] : ["diph"];
+      allow = s => s!==ipa && !near.has(s) && farVowel.includes(familyOf(s));
+    } else {
+      allow = s => s!==ipa && !near.has(s) && vowelFams.includes(familyOf(s));
+    }
+  }
+  const pool=[];
+  for(const [s,ws] of Object.entries(SOUND_WORDS)){
+    if(!allow(s)) continue;
+    for(const w of ws){ if(!own.has(w)) pool.push(w); }
+  }
+  let picks = shuffle(pool).slice(0,n);
+  if(picks.length<n) picks = picks.concat(distractorWords(ipa, n-picks.length));
+  return picks.slice(0,n);
+}
+// generic distractor (safety fallback)
+function distractorWords(ipa, n){
+  const avoid = new Set([ipa, LENGTH_PAIRS[ipa], VOICE_PAIRS[ipa]].filter(Boolean));
+  const own = new Set(SOUND_WORDS[ipa]||[]);
+  const pool = [];
+  for(const [k,ws] of Object.entries(SOUND_WORDS)){
+    if(avoid.has(k)) continue;
+    for(const wd of ws){ if(!own.has(wd)) pool.push(wd); }
+  }
+  return shuffle(pool).slice(0, n);
+}
+// 10 questions on a beginner→advanced curve:
+//   Stage 1 (×4) EASY  — 3 options, far distractors
+//   Stage 2 (×3) MEDIUM— 3 options, mid distractors (no minimal pair)
+//   Stage 3 (×3) HARD  — minimal pair (2 options) if one exists, else mid odd-one-out
+function buildSoundQuestions(ipa){
+  const words = (SOUND_WORDS[ipa]||[]).slice();
+  if(!words.length) return [];
+  const qs = [];
+  const hasNear = nearPartners(ipa).length>0;
+  const w1 = shuffle(words.slice());
+  for(let i=0;i<4 && i<w1.length;i++){
+    const right=w1[i], wrongs=tierWords(ipa,2,"far");
+    qs.push(ex({ kind:`Find the /${ipa}/ sound`, lvl:"Easy", prompt:`Which word has the /${ipa}/ sound?`,
+      options:shuffle([opt(right,true), ...wrongs.map(x=>opt(x))]),
+      hint:`“${right}” has /${ipa}/. The others sound clearly different — tap 🔊 to compare.` }));
+  }
+  const w2 = shuffle(words.slice());
+  for(let i=0;i<3 && i<w2.length;i++){
+    const right=w2[i], wrongs=tierWords(ipa,2,"mid");
+    qs.push(ex({ kind:"Listen & choose", lvl:"Medium", variant:"listen", word:right, sub:"Which word did you hear?",
+      options:shuffle([opt(right,true), ...wrongs.map(x=>opt(x))]),
+      hint:`You heard “${right}” — it has the /${ipa}/ sound.` }));
+  }
+  const w3 = shuffle(words.slice());
+  for(let i=0;i<3;i++){
+    if(hasNear){
+      const right=w3[i%w3.length], wrong=tierWords(ipa,1,"near")[0];
+      qs.push(ex({ kind:"Minimal pair", lvl:"Hard", variant:"listen", word:right, sub:"Which word did you hear?",
+        options:shuffle([opt(right,true), opt(wrong)]),
+        hint:`Tricky pair! “${right}” has /${ipa}/. Listen for the small difference — tap 🔊 to compare.` }));
+    } else {
+      const keep=shuffle(words.filter(x=>x!==w3[i%w3.length])).slice(0,2);
+      const odd=tierWords(ipa,1,"mid")[0] || distractorWords(ipa,1)[0] || "no";
+      qs.push(ex({ kind:"Spot the odd one", lvl:"Hard", prompt:`Which word does NOT have the /${ipa}/ sound?`,
+        options:shuffle([opt(odd,true), ...keep.map(x=>opt(x))]),
+        hint:`“${keep.join("” and “")}” have /${ipa}/; “${odd}” does not.` }));
+    }
+  }
+  return qs.slice(0,10);
+}
+function startSoundPractice(ipa){
+  const qs = buildSoundQuestions(ipa);
+  if(!qs.length) return;
+  SOUND_STAGE.exercises = qs;
+  SOUND_STAGE.title = `Practice: ${soundLabel(ipa)}`;
+  session = { stageId:"soundpx", step:"quiz", qi:0, correct:0, total:qs.length, earned:0,
+              perfect:true, comboStart:S.combo, queue:qs, isReview:true, soundIpa:ipa };
+  S.combo=0; renderHUD(); go({name:"stage"});
+}
+
 function stepBar(active){ // active: 0..3
   return `<div class="steps">${[0,1,2,3].map(i=>`<i class="${i<active?'on':(i===active?'cur':'')}"></i>`).join("")}</div>`;
 }
@@ -1503,7 +2055,7 @@ function ipaPills(items, cls){
   return `<div class="ipa-grid">${items.map(it=>{
     const word = it[1]||"";
     return `
-    <div class="ipa-pill ${cls||''}" data-action="playword" data-word="${word}" aria-label="Play ${word}">
+    <div class="ipa-pill ${cls||''}" data-action="playword" data-word="${word}" data-ipa="${it[0]}" aria-label="Play ${word}">
       <b class="ipa">${it[0]}</b>${word?`<span class="w">${word}</span><span class="sp">${SPK_SVG}</span>`:""}
     </div>`;}).join("")}</div>`;
 }
@@ -1577,7 +2129,7 @@ function renderExercise(s){
     ${topbar(2)}
     <div class="pad" style="position:relative">
       <div class="combo" id="comboMsg"></div>
-      <span class="q-kind">${q.kind} · ${session.qi+1}/${session.total}</span>
+      <span class="q-kind">${q.kind} · ${session.qi+1}/${session.total}${q.lvl?` <span class="q-lvl ${q.lvl.toLowerCase()}">${q.lvl}</span>`:""}</span>
       ${promptHTML}
       <div class="opts ${isChip?'wrap':''}" id="opts">${optsHTML}</div>
     </div>`;
@@ -1601,6 +2153,7 @@ function checkAnswer(){
   const q = sessionExercises(s)[session.qi];
   const opts = session._opts, sel = session.sel;
   if(sel==null) return;
+  if(session.locked) return;                 // QA fix: block double-submit (fast double-tap)
   session.locked=true;
   const correct = opts[sel].correct;
   const els=[...document.querySelectorAll("#opts .opt")];
@@ -1608,7 +2161,8 @@ function checkAnswer(){
     el.classList.remove("sel");
     if(opts[i].correct) el.classList.add("correct");
     else if(i===sel) el.classList.add("wrong");
-    el.style.pointerEvents="none";
+    el.classList.add("answered");           // blocks re-pick (see pickOption) but
+                                            // keeps the speaker buttons tappable
   });
 
   if(correct){
@@ -1641,7 +2195,16 @@ function checkAnswer(){
     // PRIORITY 3: stash this question for "Today's Review" (dedupe by prompt, cap 30)
     addToReview(q);
     els[sel].classList.add("shake");
-    feedbackNO(q.hint);
+    // TEACHING FEEDBACK: explain chosen vs correct & why, falling back to the hint
+    const chosenLbl = opts[sel].label;
+    const teach = whyDifferent(chosenLbl, cl);
+    const norm = s => String(s).replace(/[\/\[\]]/g,"").trim();
+    const cTok = norm(chosenLbl), aTok = norm(cl);
+    let compare = null;
+    if(teach && PHONEME_SAY[cTok] && PHONEME_SAY[aTok]){
+      compare = { a: PHONEME_SAY[aTok][0], b: PHONEME_SAY[cTok][0] };  // correct word first
+    }
+    feedbackNO(teach || q.hint, compare);
     renderHUD();
   }
   save();
@@ -1684,15 +2247,62 @@ function feedbackOK(msg, gain){
     <div class="fb-head"><span class="ic">✓</span><b>${msg}</b><span class="xpgain">+${gain} XP</span></div>
     <button class="btn" data-action="next">Continue</button></div>`;
 }
-const GENTLE = ["Almost there!","So close — listen again","This sound is slightly different","Let's try a similar word",
-  "Nearly! Tap 🔊 and compare","Good attempt — here's the difference","Close one! Listen once more"];
-function feedbackNO(hint){
+const GENTLE = ["Let's compare the two sounds","Listen for the difference","Worth a closer listen",
+  "Almost — here's the distinction","Tune your ear to this one","Compare them once more"];
+// ===== TEACHING FEEDBACK: explain WHY the chosen sound differs from the answer =====
+const SOUND_DESC = {
+  "ɪ":"short, relaxed ‘i’ (ship)","iː":"long, tense ‘ee’ (sheep)",
+  "e":"short ‘e’ (bed)","æ":"open ‘a’, mouth wide (cat)","ʌ":"short ‘uh’ (cup)",
+  "ɒ":"short, rounded ‘o’ (hot)","ɑː":"long, open ‘ah’ (car)",
+  "ʊ":"short ‘oo’ (book)","uː":"long ‘oo’ (food)","ɔː":"long ‘aw’ (door)",
+  "ə":"weak, unstressed ‘uh’ (about)","ɜː":"long ‘er’ (bird)",
+  "eɪ":"glide ‘ay’ (day)","aɪ":"glide ‘eye’ (my)","ɔɪ":"glide ‘oy’ (boy)",
+  "aʊ":"glide ‘ow’ (now)","əʊ":"glide ‘oh’ (go)",
+  "ɪə":"glide ‘ear’ (here)","eə":"glide ‘air’ (hair)","ʊə":"glide ‘oor’ (tour)",
+  "p":"voiceless ‘p’","b":"voiced ‘b’","t":"voiceless ‘t’","d":"voiced ‘d’",
+  "k":"voiceless ‘k’","g":"voiced ‘g’","f":"voiceless ‘f’","v":"voiced ‘v’",
+  "θ":"voiceless ‘th’ (think)","ð":"voiced ‘th’ (this)","s":"voiceless ‘s’ (hiss)","z":"voiced ‘z’ (buzz)",
+  "ʃ":"voiceless ‘sh’ (she)","ʒ":"voiced ‘zh’ (vision)","tʃ":"voiceless ‘ch’ (chair)","dʒ":"voiced ‘j’ (jump)",
+  "h":"breathy ‘h’","m":"‘m’, lips together","n":"‘n’, tongue up","ŋ":"‘ng’ (sing)",
+  "l":"‘l’, tongue tip up","r":"‘r’","w":"‘w’, rounded lips","j":"‘y’ (yes)"
+};
+const LENGTH_PAIRS = {"ɪ":"iː","iː":"ɪ","ʊ":"uː","uː":"ʊ","ɒ":"ɔː","ɔː":"ɒ","ʌ":"ɑː","ɑː":"ʌ","ə":"ɜː","ɜː":"ə"};
+const VOICE_PAIRS  = {"p":"b","b":"p","t":"d","d":"t","k":"g","g":"k","f":"v","v":"f","θ":"ð","ð":"θ","s":"z","z":"s","ʃ":"ʒ","ʒ":"ʃ","tʃ":"dʒ","dʒ":"tʃ"};
+// Build a teaching explanation comparing the chosen vs correct option.
+// Works when the options are IPA tokens (e.g. /ɪ/ vs /iː/). Returns "" otherwise.
+function whyDifferent(chosenLabel, correctLabel){
+  const norm = s => String(s).replace(/[\/\[\]]/g,"").trim();
+  const c = norm(chosenLabel), a = norm(correctLabel);
+  if(!c || !a || c===a) return "";
+  const cDesc = SOUND_DESC[c], aDesc = SOUND_DESC[a];
+  if(!cDesc || !aDesc) return "";
+  let why;
+  if(LENGTH_PAIRS[a]===c){
+    why = "They differ in length — listen for how long the vowel is held.";
+  } else if(VOICE_PAIRS[a]===c){
+    why = "Same mouth shape, but one is voiced (throat buzzes) and one is voiceless. Rest a finger on your throat to feel it.";
+  } else {
+    why = "Different mouth position — say both slowly and notice where your tongue and lips move.";
+  }
+  return `You chose /${c}/ (${cDesc}). The answer is /${a}/ (${aDesc}). ${why}`;
+}
+
+function feedbackNO(hint, compare){
   const fb=document.getElementById("feedback");
   fb.className="no show";
+  const cmp = (compare && compare.a && compare.b)
+    ? `<button class="btn ghost" data-action="compareSounds" data-a="${compare.a}" data-b="${compare.b}" style="margin-bottom:8px">🔊 Hear both sounds</button>`
+    : "";
   fb.innerHTML=`<div class="fb-inner">
     <div class="fb-head"><span class="ic">↻</span><b>${pick(GENTLE)}</b></div>
     <div class="fb-hint">💡 ${hint||"Tap 🔊 and listen for the small difference between the two words."}</div>
+    ${cmp}
     <button class="btn" data-action="next">Got it, continue</button></div>`;
+}
+// play two example words back-to-back so the learner hears the contrast
+function compareSounds(aWord, bWord){
+  if(!aWord||!bWord) return;
+  Audio$.speakSeq([[aWord,0.8],[bWord,0.8]]);
 }
 function nextQuestion(){
   document.getElementById("feedback").className="";
@@ -1873,17 +2483,21 @@ document.addEventListener("click", e=>{
   const a = t.dataset.action;
   switch(a){
     case "goMap": session=null; go({name:"map"}); break;
+    case "goSounds": session=null; go({name:"sounds"}); break;
+    case "playPhoneme": playPhoneme(t.dataset.ipa); break;
+    case "openSoundCard": session=null; go({name:"soundcard", ipa:t.dataset.ipa}); break;
     case "goProfile": go({name:"profile"}); break;
     case "goDone": go({name:"done"}); break;
-    case "openStage": if(isUnlocked(t.dataset.id)) startStage(t.dataset.id); break;
+    case "openStage": startStage(t.dataset.id); break;
     case "startReview": startReview(); break;
     case "toLearn": session.step="learn"; render(); window.scrollTo(0,0); break;
     case "toQuiz": session.step="quiz"; session.qi=0; S.combo=0; renderHUD(); render(); window.scrollTo(0,0); break;
     case "pick": pickOption(+t.dataset.idx); break;
     case "check": checkAnswer(); break;
     case "next": nextQuestion(); window.scrollTo(0,0); break;
+    case "compareSounds": compareSounds(t.dataset.a, t.dataset.b); break;
     // audio (in-lesson playback)
-    case "playword": playWord(t.dataset.word, t.dataset.src, t); break;
+    case "playword": playWord(t.dataset.word, t.dataset.src, t, t.dataset.ipa); break;
     case "speak": playWord(t.dataset.word, t.dataset.src, t); break;
     case "listen": playWord(t.dataset.word, t.dataset.src, t); break;
     // daily goal
