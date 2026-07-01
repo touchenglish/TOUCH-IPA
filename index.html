@@ -232,6 +232,28 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 
 /* ---------- EXERCISE ENGINE ---------- */
 .q-kind{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft)}
+/* language picker (first run) */
+.lang-pick{text-align:center;padding-top:48px}
+.lang-logo{font-family:'Fredoka';font-weight:700;color:var(--coral);letter-spacing:1px;font-size:14px;margin-bottom:24px}
+.lang-title{font-family:'Fredoka';font-weight:700;color:var(--ink);font-size:26px;margin:0 0 6px}
+.lang-sub{color:var(--ink-soft);font-weight:600;margin:0 0 28px}
+.lang-list{display:flex;flex-direction:column;gap:14px;max-width:320px;margin:0 auto}
+.btn.lang-opt{justify-content:flex-start;gap:14px;font-size:18px;padding:18px 22px}
+.name-wrap{display:flex;flex-direction:column;gap:14px;max-width:320px;margin:0 auto}
+.name-input{font-family:'Fredoka';font-size:18px;font-weight:600;color:var(--ink);text-align:center;
+  padding:16px 18px;border:2px solid var(--line);border-radius:16px;background:#fff;outline:none;transition:border-color .15s}
+.name-input:focus{border-color:var(--coral)}
+.name-input::placeholder{color:#AEB8C6;font-weight:500}
+/* top-right switcher + dropdown */
+.lang-btn{margin-left:2px}
+#langMenu{position:relative;z-index:50}
+.lang-menu-backdrop{position:fixed;inset:0;z-index:49}
+.lang-menu{position:absolute;right:14px;top:2px;z-index:50;background:#fff;border:1px solid var(--line);
+  border-radius:14px;box-shadow:0 10px 30px rgba(27,36,51,.20);padding:6px;min-width:190px}
+.lang-menu-item{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;cursor:pointer;
+  font-family:'Fredoka';font-weight:600;font-size:15px;color:var(--ink);padding:11px 12px;border-radius:10px;text-align:left}
+.lang-menu-item:hover{background:#F1F5FA}
+.lang-menu-item.on{color:var(--coral)}
 .q-lvl{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;font-size:10px;letter-spacing:.5px;color:#fff;vertical-align:middle}
 .q-lvl.easy{background:#4FAE8A}.q-lvl.medium{background:#3E6FA0}.q-lvl.hard{background:#8B1E3F}
 .q-prompt{text-align:center;margin:14px 0 4px}
@@ -514,6 +536,7 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
 
 <div id="app">
   <div id="hud"></div>
+  <div id="langMenu"></div>
   <div id="screen"></div>
   <div id="feedback"></div>
   <div id="nav"></div>
@@ -529,13 +552,22 @@ h1,h2,h3,.disp{font-family:'Fredoka',sans-serif;font-weight:700;letter-spacing:.
    ===================================================================== */
 
 // Teacher: paste real YouTube links here to embed them automatically.
+// Per-language video links. zh = Chinese versions (existing); en = English.
+// Malay and English UI both use the English video (en). Chinese UI uses zh.
+// welcome has no video yet → that stage simply shows no video.
 const VIDEOS = {
-  welcome:     "https://youtu.be/UuZCxCoH3ro",
-  lesson1:     "https://youtu.be/ZuSuf3wM4Zg",
-  diphthongs:  "https://youtu.be/tf2Udtfs7Ec",
-  consonants:  "https://youtu.be/hgpqpdPf46I",
-  bonus:       "https://youtu.be/XkjAZ-JA8eE"
+  welcome:     { zh:"https://youtu.be/UuZCxCoH3ro",  en:"" },
+  lesson1:     { zh:"https://youtu.be/ZuSuf3wM4Zg",  en:"https://youtu.be/Da5VesM66v0" },
+  diphthongs:  { zh:"https://youtu.be/tf2Udtfs7Ec",  en:"https://youtu.be/VGn47X6erdg" },
+  consonants:  { zh:"https://youtu.be/hgpqpdPf46I",  en:"https://youtu.be/bICTwGLTtg8" },
+  bonus:       { zh:"https://youtu.be/XkjAZ-JA8eE",  en:"https://youtu.be/ORS_XUlAick" }
 };
+// resolve the right video URL for the current language.
+// zh → Chinese slot; en & ms → English slot. Empty slot = that stage shows no video.
+function videoUrl(key){
+  const v = VIDEOS[key] || {};
+  return (LANG==="zh") ? (v.zh||"") : (v.en||"");
+}
 
 // helper builders ----------------------------------------------------
 const opt = (label, correct=false) => ({label, correct});
@@ -1033,6 +1065,7 @@ const Persist = {
    ===================================================================== */
 function freshState(){
   return {
+    name:"",                   // learner's name (asked on first run, shown in Profile)
     xp:0, combo:0, bestCombo:0,
     streak:1, lastActive:new Date().toDateString(),
     badges:{},                 // id -> true
@@ -1115,6 +1148,41 @@ const pick = a => a[Math.floor(Math.random()*a.length)];
 
 // --- sound (optional, synthesized, no assets) ---
 let SOUND = true, AC=null;
+
+// ===== LANGUAGE (i18n) — step 1: video switching + language picker =====
+// Supported UI languages. Videos: zh uses Chinese slot; en & ms use English slot.
+const LANGS = [
+  { code:"en", label:"English", short:"EN" },
+  { code:"zh", label:"中文", short:"ZH" },
+  { code:"ms", label:"Bahasa Melayu", short:"BM" }
+];
+function langShort(code){ const l=LANGS.find(x=>x.code===code); return l?l.short:"🌐"; }
+const LANG_KEY = "touch_ipa_lang";
+function loadLang(){ try{ return HAS_LS ? (localStorage.getItem(LANG_KEY)||"") : (memLang||""); }catch(e){ return memLang||""; } }
+let memLang = "";
+function saveLang(code){ memLang=code; try{ if(HAS_LS) localStorage.setItem(LANG_KEY, code); }catch(e){} }
+let LANG = loadLang() || "";           // "" until the learner picks the first time
+function setLang(code){
+  if(!LANGS.some(l=>l.code===code)) return;
+  LANG = code; saveLang(code);
+  render();                            // re-render so videos + (later) text update
+}
+function langChosen(){ return !!LANG; }
+
+// small dropdown for the top-right language switcher
+let langMenuOpen = false;
+function renderLangMenu(){
+  const host = document.getElementById("langMenu");
+  if(!host) return;
+  if(!langMenuOpen){ host.innerHTML=""; return; }
+  const items = LANGS.map(l=>`
+    <button class="lang-menu-item ${l.code===LANG?'on':''}" data-action="setLang" data-lang="${l.code}">
+      <span>${l.label}</span>${l.code===LANG?' ✓':''}
+    </button>`).join("");
+  host.innerHTML = `<div class="lang-menu-backdrop" data-action="closeLangMenu"></div>
+    <div class="lang-menu">${items}</div>`;
+}
+
 function ac(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
 function tone(freq, t0, dur, type="sine", vol=.13){
   const c=ac(); if(!c) return; const o=c.createOscillator(), g=c.createGain();
@@ -1442,6 +1510,9 @@ const $screen = ()=>document.getElementById("screen");
 function go(v){ view=v; render(); window.scrollTo(0,0); }
 
 function render(){
+  // First run: ask for a language, then the learner's name, before the app.
+  if(!langChosen()){ renderNav(); return renderLangPicker(); }
+  if(!nameChosen()){ renderNav(); return renderNameAsk(); }
   renderHUD(); renderNav();
   document.getElementById("feedback").className=""; document.getElementById("feedback").innerHTML="";
   if(view.name==="map") return renderMap();
@@ -1450,6 +1521,48 @@ function render(){
   if(view.name==="profile") return renderProfile();
   if(view.name==="stage") return renderStageFlow();
   if(view.name==="done") return renderCourseComplete();
+}
+
+// Full-screen first-run language chooser.
+function renderLangPicker(){
+  const opts = LANGS.map(l=>`
+    <button class="btn lang-opt" data-action="pickLang" data-lang="${l.code}">
+      <span>${l.label}</span>
+    </button>`).join("");
+  const hud=document.getElementById("hud"); if(hud) hud.innerHTML="";
+  document.getElementById("screen").innerHTML = `
+    <div class="pad lang-pick">
+      <div class="lang-logo">✦ TOUCH ENGLISH</div>
+      <h1 class="lang-title">Choose your language</h1>
+      <p class="lang-sub">选择语言 · Pilih bahasa</p>
+      <div class="lang-list">${opts}</div>
+    </div>`;
+}
+
+function nameChosen(){ return !!(S.name && S.name.trim()); }
+// Ask the learner's name after they pick a language (first run only).
+function renderNameAsk(){
+  const hud=document.getElementById("hud"); if(hud) hud.innerHTML="";
+  document.getElementById("screen").innerHTML = `
+    <div class="pad lang-pick">
+      <div class="lang-logo">✦ TOUCH ENGLISH</div>
+      <h1 class="lang-title">What's your name?</h1>
+      <p class="lang-sub">你叫什么名字？· Siapa nama anda?</p>
+      <div class="name-wrap">
+        <input id="nameInput" class="name-input" type="text" maxlength="24"
+          placeholder="Your name" autocomplete="off"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();commitName();}">
+        <button class="btn coral" data-action="saveName">Start Learning →</button>
+      </div>
+    </div>`;
+  const inp=document.getElementById("nameInput"); if(inp){ try{ inp.focus(); }catch(e){} }
+}
+function commitName(){
+  const inp=document.getElementById("nameInput");
+  const val=(inp && inp.value ? inp.value : "").trim();
+  if(!val) return;                 // require a name to continue
+  S.name = val; save();
+  go({name:"map"});
 }
 
 /* ---------- HUD ---------- */
@@ -1461,6 +1574,7 @@ function renderHUD(){
       <span class="chip streak"><span class="ic">🔥</span>${S.streak}</span>
       <span class="chip xp"><span class="ic">⚡</span>${S.xp}</span>
       <button class="sound-btn" data-action="toggleSound" title="Sound">${SOUND?"🔊":"🔈"}</button>
+      <button class="sound-btn lang-btn" data-action="cycleLang" title="Language">${LANG?langShort(LANG):"🌐"}</button>
       <span class="lvl">
         <span class="ring" style="--p:${(li.pct*360).toFixed(0)}deg"><i>${li.lvl}</i></span>
       </span>
@@ -1704,7 +1818,10 @@ function buildQueue(s){
 function startStage(id){
   const s = COURSE.find(x=>x.id===id);
   const queue = buildQueue(s);
-  session = { stageId:id, step:"video", qi:0, correct:0, total:queue.length, earned:0,
+  // If this stage has no video in the current language (e.g. Welcome has no
+  // English video), skip the Watch step and open straight into Learn.
+  const hasVideo = s.video && ytId(videoUrl(s.video.key));
+  session = { stageId:id, step: hasVideo ? "video" : "learn", qi:0, correct:0, total:queue.length, earned:0,
               perfect:true, comboStart:S.combo, queue };
   go({name:"stage"});
 }
@@ -1993,17 +2110,17 @@ function ytFallback(frameId, id, title){
      </a>`;
 }
 function renderVideo(s){
-  const url = VIDEOS[s.video.key];
+  const url = videoUrl(s.video.key);
   const id  = ytId(url);
   let player;
   if(!id){
-    // no link provided yet → existing placeholder
+    // No video for this stage in the current language (e.g. Welcome has no
+    // English video). Show a gentle note instead of a teacher placeholder.
     player = `<div class="video">
          <span class="tag">▶ VIDEO LESSON</span>
          <div class="play">▶</div>
          <div class="vmeta"><b>${s.video.title}</b><span>${s.video.caption}</span></div>
-       </div>
-       <div class="placeholder-note">📌 Teacher: paste the YouTube link in <b>VIDEOS.${s.video.key}</b> to embed it here.</div>`;
+       </div>`;
   } else {
     const watch = "https://www.youtube.com/watch?v=" + id;
     const thumb = "https://img.youtube.com/vi/" + id + "/hqdefault.jpg";
@@ -2416,6 +2533,8 @@ function renderCourseComplete(){
 function renderProfile(){
   const li=levelInfo(S.xp);
   const stagesDone = COURSE.filter(s=>S.stages[s.id]?.completed).length;
+  const displayName = (S.name && S.name.trim()) ? S.name.trim() : "TOUCH Learner";
+  const initials = displayName.split(/\s+/).map(w=>w[0]||"").slice(0,2).join("").toUpperCase() || "TL";
   const shelf = Object.keys(BADGES).map(id=>{
     const b=BADGES[id], have=!!S.badges[id];
     return `<div class="bcell ${have?'':'locked'}">${badgeMedal(b, !have)}<div class="n">${b.name}</div></div>`;
@@ -2423,9 +2542,9 @@ function renderProfile(){
   $screen().innerHTML = `
     <div class="profile">
       <div class="pf-head">
-        <div class="av"><span class="av-initials">TL</span><span class="av-lv">Lv ${li.lvl}</span></div>
+        <div class="av"><span class="av-initials">${initials}</span><span class="av-lv">Lv ${li.lvl}</span></div>
         <div class="pf-meta">
-          <h2>TOUCH Learner</h2>
+          <h2>${displayName}</h2>
           <p>🔥 ${S.streak}-day streak</p>
           <div class="pf-bar"><i style="width:${(li.pct*100).toFixed(0)}%"></i></div>
           <small>${li.into} / ${li.span} XP to Level ${li.lvl+1}</small>
@@ -2504,6 +2623,11 @@ document.addEventListener("click", e=>{
     case "cycleGoal": { const order=[20,50,100]; S.dailyGoal = order[(order.indexOf(S.dailyGoal)+1)%order.length]; save(); renderHUD(); renderMap(); } break;
     case "setGoal": S.dailyGoal=+t.dataset.g; save(); renderHUD(); renderProfile(); break;
     case "toggleSound": SOUND=!SOUND; if(SOUND){ac(); sfx("tap");} renderHUD(); break;
+    case "pickLang": setLang(t.dataset.lang); break;
+    case "saveName": commitName(); break;
+    case "cycleLang": langMenuOpen=!langMenuOpen; renderLangMenu(); break;
+    case "setLang": langMenuOpen=false; setLang(t.dataset.lang); break;
+    case "closeLangMenu": langMenuOpen=false; renderLangMenu(); break;
     case "resetCourse":
       if(confirm("Reset ALL progress, XP and badges? This can't be undone.")){
         S=freshState(); save(); go({name:"map"});
